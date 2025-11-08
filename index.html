@@ -1513,98 +1513,90 @@
             document.getElementById('messages-badge').textContent = '0';
         }
         
-        // FIXED: Admin pending cases filtering function
-        function updateAdminPendingCases(cases) {
-            const pendingCasesList = document.getElementById('admin-pending-cases-list');
-            if (!pendingCasesList) {
-                console.error('❌ admin-pending-cases-list element not found');
-                return;
-            }
-            
-            console.log('🔄 Updating Pending Upload section with', cases.length, 'total cases');
-            
-            // SIMPLIFIED FILTERING - Show all cases that are NOT in completed/final states
-            // ✅ Simplified pending logic
-const pendingCases = cases.filter(c => {
-    const status = (c.status ?? "").toLowerCase();
-
-    // Include these
-    if (
-        status.includes("pending") ||
-        status.includes("upload") ||
-        status.includes("treatment") ||
-        status.trim() === "" ||
-        !c.treatmentPlan
-    ) {
-        return true;
+        // ✅ FIXED: Admin pending cases filtering function
+function updateAdminPendingCases(cases) {
+    const pendingCasesList = document.getElementById('admin-pending-cases-list');
+    if (!pendingCasesList) {
+        console.error('❌ admin-pending-cases-list element not found');
+        return;
     }
 
-    return false;
-});
-            
-            console.log('📋 Pending upload cases after filtering:', pendingCases.length);
-            console.log('📝 Pending cases details:', pendingCases);
-            
-            // Update the UI
-            if (pendingCases.length === 0) {
-                pendingCasesList.innerHTML = `
-                    <div class="admin-empty-state">
-                        <i class="fas fa-upload"></i>
-                        <h3>No Cases Pending Upload</h3>
-                        <p>All cases have been processed or are in other status categories.</p>
-                        <div style="margin-top: 15px;">
-                            <button class="btn btn-primary btn-sm" onclick="loadCases()">
-                                <i class="fas fa-sync-alt"></i> Refresh Data
-                            </button>
-                            <button class="btn btn-warning btn-sm" onclick="emergencyDebug()" style="margin-left: 10px;">
-                                <i class="fas fa-bug"></i> Debug
-                            </button>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-            
-            pendingCasesList.innerHTML = pendingCases.map(caseItem => {
-                const caseId = caseItem.caseId || caseItem._id || 'Unknown Case ID';
-                const patient = caseItem.patient || caseItem.patientName || 'Unknown Patient';
-                const dentist = caseItem.doctor || caseItem.dentistName || caseItem.submittedBy || 'Unknown Dentist';
-                const status = caseItem.status || 'Pending Upload';
-                const orderDate = caseItem.orderDate || caseItem.createdAt || 'Unknown Date';
-                
-                return `
-                    <div class="admin-case-item">
-                        <div class="admin-case-info">
-                            <div class="admin-case-id">${caseId}</div>
-                            <div class="admin-case-patient">Patient: ${patient}</div>
-                            <div class="admin-case-dentist">Dentist: ${dentist}</div>
-                            <div class="admin-case-date">Order Date: ${formatDate(orderDate)}</div>
-                            <div class="admin-case-status">Status: ${status}</div>
-                        </div>
-                        <div class="admin-case-status">
-                            <span class="admin-status-badge admin-status-pending">${status}</span>
-                        </div>
-                        <div class="admin-case-actions">
-                            <button class="admin-action-btn" title="View Details" onclick="viewCaseDetails('${caseItem._id}')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="admin-action-btn" title="Upload Treatment Plan" onclick="uploadTreatmentPlan('${caseItem._id}')">
-                                <i class="fas fa-file-medical"></i>
-                            </button>
-                            <button class="admin-action-btn" title="Contact Doctor" onclick="contactDoctor('${dentist}')">
-                                <i class="fas fa-envelope"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            // Update the badge count
-            document.getElementById('pending-badge').textContent = pendingCases.length;
-            document.getElementById('pending-cases').textContent = pendingCases.length;
-            
-            console.log('✅ Pending Upload section updated with', pendingCases.length, 'cases');
-        }
+    console.log('🔄 Updating Pending Upload section with', cases.length, 'total cases');
+
+    // ✅ Simplified pending filtering logic
+    const pendingCases = cases.filter(c => {
+        const status = (c.status ?? "").toLowerCase().trim();
+
+        // ✅ Include if:
+        return (
+            status.includes("pending") ||          // pending
+            status.includes("upload") ||           // pending upload
+            status.includes("treatment") ||        // pending treatment plan
+            status === "" ||                       // empty status
+            !c.treatmentPlan                       // no treatment plan uploaded yet
+        );
+    });
+
+    console.log('📋 Pending upload cases after filtering:', pendingCases.length);
+    console.log('📝 Pending cases details:', pendingCases);
+
+    // ✅ Render UI
+    if (pendingCases.length === 0) {
+        pendingCasesList.innerHTML = `
+            <div class="admin-empty-state">
+                <i class="fas fa-upload"></i>
+                <h3>No Cases Pending Upload</h3>
+                <p>All cases have been processed or are in other status.</p>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary btn-sm" onclick="loadCases()">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    pendingCasesList.innerHTML = pendingCases.map(caseItem => {
+        const caseId = caseItem.caseId || caseItem._id || 'Unknown Case ID';
+        const patient = caseItem.patient || 'Unknown Patient';
+        const dentist = caseItem.doctor || caseItem.submittedBy || 'Unknown Dentist';
+        const status = caseItem.status || 'Pending Upload';
+        const orderDate = caseItem.orderDate || caseItem.createdAt || 'Unknown Date';
+
+        return `
+            <div class="admin-case-item">
+                <div class="admin-case-info">
+                    <div class="admin-case-id">${caseId}</div>
+                    <div class="admin-case-patient">Patient: ${patient}</div>
+                    <div class="admin-case-dentist">Dentist: ${dentist}</div>
+                    <div class="admin-case-date">Order Date: ${formatDate(orderDate)}</div>
+                    <div class="admin-case-status">Status: ${status}</div>
+                </div>
+                <div class="admin-case-status">
+                    <span class="admin-status-badge admin-status-pending">${status}</span>
+                </div>
+                <div class="admin-case-actions">
+                    <button class="admin-action-btn" title="View Details" onclick="viewCaseDetails('${caseItem._id}')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="admin-action-btn" title="Upload Treatment Plan" onclick="uploadTreatmentPlan('${caseItem._id}')">
+                        <i class="fas fa-file-medical"></i>
+                    </button>
+                    <button class="admin-action-btn" title="Contact Doctor" onclick="contactDoctor('${dentist}')">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // ✅ Update badge counts
+    document.getElementById('pending-badge').textContent = pendingCases.length;
+    document.getElementById('pending-cases').textContent = pendingCases.length;
+
+    console.log('✅ Pending Upload section updated with', pendingCases.length, 'cases');
+}
         
         function updateAdminRevisionCases(cases) {
             const revisionCasesList = document.getElementById('admin-revision-cases-list');
