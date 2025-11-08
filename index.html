@@ -1524,28 +1524,23 @@
             console.log('🔄 Updating Pending Upload section with', cases.length, 'total cases');
             
             // SIMPLIFIED FILTERING - Show all cases that are NOT in completed/final states
-            const pendingCases = cases.filter(c => {
-                if (!c.status) return true;
-                
-                const status = c.status.toString().toLowerCase().trim();
-                
-                // EXCLUDE only clearly completed/final statuses
-                const excludePatterns = [
-                    'approved',
-                    'completed', 
-                    'cancelled',
-                    'rejected',
-                    'finished',
-                    'done'
-                ];
-                
-                const shouldExclude = excludePatterns.some(pattern => 
-                    status.includes(pattern)
-                );
-                
-                // INCLUDE everything else (pending, treatment plan, revision, hold, etc.)
-                return !shouldExclude;
-            });
+            // ✅ Simplified pending logic
+const pendingCases = cases.filter(c => {
+    const status = (c.status ?? "").toLowerCase();
+
+    // Include these
+    if (
+        status.includes("pending") ||
+        status.includes("upload") ||
+        status.includes("treatment") ||
+        status.trim() === "" ||
+        !c.treatmentPlan
+    ) {
+        return true;
+    }
+
+    return false;
+});
             
             console.log('📋 Pending upload cases after filtering:', pendingCases.length);
             console.log('📝 Pending cases details:', pendingCases);
