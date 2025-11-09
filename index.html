@@ -1540,15 +1540,17 @@
             let casesArray = [];
             
             if (Array.isArray(rawData)) {
-                casesArray = rawData;
-            } else if (rawData.data && Array.isArray(rawData.data)) {
-                casesArray = rawData.data;
-            } else if (rawData.cases && Array.isArray(rawData.cases)) {
-                casesArray = rawData.cases;
-            } else {
-                console.warn('⚠️ Unknown data format, using raw data as array');
-                casesArray = [rawData].filter(Boolean);
-            }
+    // ✅ Correct format from your API
+    casesArray = rawData;
+} else if (rawData && typeof rawData === 'object') {
+    // Handle wrapped formats (if backend changes later)
+    casesArray =
+        Array.isArray(rawData.data) ? rawData.data :
+        Array.isArray(rawData.cases) ? rawData.cases :
+        Array.isArray(rawData.result) ? rawData.result : [];
+} else {
+    casesArray = [];
+}
             
             console.log(`📦 Processing ${casesArray.length} cases from backend`);
             
