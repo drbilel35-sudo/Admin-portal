@@ -1,0 +1,1206 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClearPro Aligner - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            color: #2c7fb8;
+        }
+        
+        .logo h1 {
+            color: #2c7fb8;
+            font-size: 1.5rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #2c7fb8;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .stat-card.pending {
+            border-left-color: #ffc107;
+        }
+        
+        .stat-card.revision {
+            border-left-color: #dc3545;
+        }
+        
+        .stat-card.hold {
+            border-left-color: #17a2b8;
+        }
+        
+        .stat-card.cancelled {
+            border-left-color: #6c757d;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c7fb8;
+        }
+        
+        .stat-card.pending .stat-number {
+            color: #ffc107;
+        }
+        
+        .stat-card.revision .stat-number {
+            color: #dc3545;
+        }
+        
+        .stat-card.hold .stat-number {
+            color: #17a2b8;
+        }
+        
+        .stat-card.cancelled .stat-number {
+            color: #6c757d;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c7fb8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-count {
+            background: #2c7fb8;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .cases-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .case-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .case-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .case-item:last-child {
+            border-bottom: none;
+        }
+        
+        .case-info {
+            flex: 1;
+        }
+        
+        .case-id {
+            font-weight: bold;
+            color: #2c7fb8;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        
+        .case-patient {
+            margin-bottom: 3px;
+            font-weight: 500;
+        }
+        
+        .case-dentist {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .case-date {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        
+        .case-status {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-revision {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-hold {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-cancelled {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .case-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary {
+            background: #2c7fb8;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e5a8a;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+        }
+        
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #6c757d;
+        }
+        
+        .empty-state p {
+            margin-bottom: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .connection-status {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .connection-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .connection-content {
+            padding: 20px;
+        }
+        
+        .debug-panel {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            max-height: 300px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+        
+        .debug-item {
+            margin-bottom: 5px;
+            padding: 3px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .debug-item:last-child {
+            border-bottom: none;
+        }
+        
+        .debug-success {
+            color: #28a745;
+        }
+        
+        .debug-error {
+            color: #dc3545;
+        }
+        
+        .debug-warning {
+            color: #856404;
+        }
+        
+        .debug-info {
+            color: #0c5460;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.active {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .notification.warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .notification.info {
+            background: #17a2b8;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header i {
+            font-size: 3rem;
+            color: #2c7fb8;
+            margin-bottom: 15px;
+        }
+        
+        .login-header h2 {
+            color: #2c7fb8;
+            margin-bottom: 5px;
+        }
+        
+        .login-header p {
+            color: #666;
+        }
+        
+        .login-form {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #2c7fb8;
+            box-shadow: 0 0 0 3px rgba(44, 127, 184, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2c7fb8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        
+        .login-btn:hover {
+            background: #1e5a8a;
+        }
+        
+        .login-footer {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .case-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .case-status {
+                align-self: flex-start;
+                margin-right: 0;
+            }
+            
+            .case-actions {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text">Operation completed successfully</span>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-header">
+            <i class="fas fa-user-shield"></i>
+            <h2>Admin Login</h2>
+            <p>ClearPro Aligner System</p>
+        </div>
+        
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" value="admin" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" value="Admin123!" required>
+            </div>
+            
+            <button type="submit" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+        </form>
+        
+        <div class="login-footer">
+            Default credentials: admin / Admin123!
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" style="display: none;">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-tooth"></i>
+                    <div>
+                        <h1>ClearPro Aligner</h1>
+                        <div style="font-size: 0.9rem; color: #666;">Admin Dashboard</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="loadCases()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-info" onclick="testBackendConnection()">
+                        <i class="fas fa-plug"></i> Test Connection
+                    </button>
+                    <button class="btn btn-warning" onclick="showDebugInfo()">
+                        <i class="fas fa-bug"></i> Debug
+                    </button>
+                    <button class="btn btn-danger" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Connection Status -->
+            <div class="connection-status" id="connectionStatus" style="display: none;">
+                <div class="connection-header">
+                    <div class="section-title">
+                        <i class="fas fa-network-wired"></i> Backend Connection Status
+                    </div>
+                </div>
+                <div class="connection-content" id="connectionStatusContent">
+                    <!-- Connection info will appear here -->
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats">
+                <div class="stat-card" onclick="showAllCases()">
+                    <div class="stat-number" id="totalCases">0</div>
+                    <div class="stat-label">Total Cases</div>
+                </div>
+                <div class="stat-card pending" onclick="showPendingCases()">
+                    <div class="stat-number" id="pendingCases">0</div>
+                    <div class="stat-label">Pending Upload</div>
+                </div>
+                <div class="stat-card revision" onclick="showRevisionCases()">
+                    <div class="stat-number" id="revisionCases">0</div>
+                    <div class="stat-label">Revision Requests</div>
+                </div>
+                <div class="stat-card hold" onclick="showHoldCases()">
+                    <div class="stat-number" id="holdCases">0</div>
+                    <div class="stat-label">Cases On Hold</div>
+                </div>
+                <div class="stat-card cancelled" onclick="showCancelledCases()">
+                    <div class="stat-number" id="cancelledCases">0</div>
+                    <div class="stat-label">Cancelled Cases</div>
+                </div>
+            </div>
+
+            <!-- Pending Cases Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fas fa-upload"></i> Cases Pending Upload
+                    </div>
+                    <div class="section-count" id="pendingCount">0</div>
+                </div>
+                <div class="cases-list" id="pendingCasesList">
+                    <div class="empty-state">
+                        <i class="fas fa-upload"></i>
+                        <h3>Loading cases...</h3>
+                        <p>Please wait while we load your cases</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Debug Panel -->
+            <div class="section" id="debugPanel" style="display: none;">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fas fa-bug"></i> Debug Information
+                    </div>
+                    <button class="btn btn-sm" onclick="hideDebugInfo()">
+                        <i class="fas fa-times"></i> Hide
+                    </button>
+                </div>
+                <div class="debug-panel" id="debugContent">
+                    <!-- Debug info will appear here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Configuration
+        const BACKEND_URLS = [
+            'https://clearpro-aligner-portal-backend.onrender.com/api/cases',
+            'https://clearpro-aligner-portal-backend.onrender.com/api',
+            'https://clearpro-aligner-portal-backend.onrender.com/cases',
+            'http://localhost:3000/api/cases'
+        ];
+        
+        let allCases = [];
+        let debugLog = [];
+        let currentBackendIndex = 0;
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'admin' && password === 'Admin123!') {
+                showNotification('Login successful! Welcome to Admin Dashboard.', 'success');
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                initializeDashboard();
+            } else {
+                showNotification('Invalid credentials! Please try again.', 'error');
+            }
+        });
+
+        // Initialize dashboard
+        function initializeDashboard() {
+            addDebug('🚀 Admin Dashboard initialized');
+            addDebug('💡 Click "Test Connection" to check backend connectivity');
+            testBackendConnection();
+        }
+
+        // Test backend connection
+        async function testBackendConnection() {
+            showNotification('Testing backend connection...', 'info');
+            addDebug('🔌 Starting backend connection test...');
+            
+            document.getElementById('connectionStatus').style.display = 'block';
+            const statusContent = document.getElementById('connectionStatusContent');
+            statusContent.innerHTML = '<div class="debug-info">Testing connection to backend servers...</div>';
+            
+            let connected = false;
+            let workingUrl = '';
+            let responseData = null;
+            
+            // Test each backend URL
+            for (let i = 0; i < BACKEND_URLS.length; i++) {
+                const url = BACKEND_URLS[i];
+                addDebug(`📡 Testing URL ${i + 1}: ${url}`);
+                
+                try {
+                    const response = await axios.get(url, {
+                        timeout: 8000,
+                        validateStatus: function (status) {
+                            return status < 500; // Accept any status except server errors
+                        }
+                    });
+                    
+                    addDebug(`📊 Response status: ${response.status}`, 'success');
+                    
+                    if (response.status === 200) {
+                        connected = true;
+                        workingUrl = url;
+                        currentBackendIndex = i;
+                        responseData = response.data;
+                        addDebug(`✅ SUCCESS: Backend connected at ${url}`, 'success');
+                        break;
+                    } else {
+                        addDebug(`⚠️ Response status ${response.status} from ${url}`, 'warning');
+                    }
+                } catch (error) {
+                    addDebug(`❌ Connection failed: ${error.message}`, 'error');
+                }
+            }
+            
+            // Display connection results
+            if (connected) {
+                statusContent.innerHTML = `
+                    <div class="debug-success">
+                        <strong>✅ BACKEND CONNECTED SUCCESSFULLY</strong><br>
+                        <strong>URL:</strong> ${workingUrl}<br>
+                        <strong>Status:</strong> Ready to load cases<br>
+                        <strong>Response Type:</strong> ${Array.isArray(responseData) ? 'Array' : typeof responseData}
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-success" onclick="loadCases()">
+                            <i class="fas fa-download"></i> Load Cases Now
+                        </button>
+                        <button class="btn btn-info" onclick="hideConnectionStatus()" style="margin-left: 10px;">
+                            <i class="fas fa-eye-slash"></i> Hide Status
+                        </button>
+                    </div>
+                `;
+                showNotification('Backend connected successfully! Loading cases...', 'success');
+                loadCases();
+            } else {
+                statusContent.innerHTML = `
+                    <div class="debug-error">
+                        <strong>❌ BACKEND CONNECTION FAILED</strong><br>
+                        All connection attempts failed. This could be due to:<br>
+                        • Backend server is down<br>
+                        • Network connectivity issues<br>
+                        • CORS restrictions<br>
+                        • Invalid API endpoints
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-warning" onclick="useDemoData()">
+                            <i class="fas fa-desktop"></i> Use Demo Data
+                        </button>
+                        <button class="btn btn-primary" onclick="testBackendConnection()" style="margin-left: 10px;">
+                            <i class="fas fa-sync-alt"></i> Retry Connection
+                        </button>
+                    </div>
+                `;
+                showNotification('Backend connection failed. You can use demo data.', 'warning');
+            }
+        }
+
+        // Load cases from backend
+        async function loadCases() {
+            showNotification('Loading cases from backend...', 'info');
+            addDebug('🔍 Loading cases from backend...');
+            
+            const backendUrl = BACKEND_URLS[currentBackendIndex];
+            
+            try {
+                addDebug(`📡 Fetching from: ${backendUrl}`);
+                
+                const response = await axios.get(backendUrl, {
+                    timeout: 10000,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                addDebug('✅ API response received successfully', 'success');
+                addDebug(`📊 Response status: ${response.status}`);
+                addDebug(`📦 Response data type: ${typeof response.data}`);
+                addDebug(`🔢 Is array: ${Array.isArray(response.data)}`);
+                
+                // Handle different response formats
+                if (Array.isArray(response.data)) {
+                    allCases = response.data;
+                    addDebug(`🎉 Loaded ${allCases.length} real cases from backend`, 'success');
+                    showNotification(`Successfully loaded ${allCases.length} cases from backend!`, 'success');
+                } else if (response.data && Array.isArray(response.data.cases)) {
+                    allCases = response.data.cases;
+                    addDebug(`🎉 Loaded ${allCases.length} cases from nested response`, 'success');
+                    showNotification(`Successfully loaded ${allCases.length} cases from backend!`, 'success');
+                } else if (response.data && Array.isArray(response.data.data)) {
+                    allCases = response.data.data;
+                    addDebug(`🎉 Loaded ${allCases.length} cases from data property`, 'success');
+                    showNotification(`Successfully loaded ${allCases.length} cases from backend!`, 'success');
+                } else if (response.data && typeof response.data === 'object') {
+                    // Convert object to array if needed
+                    allCases = Object.values(response.data);
+                    addDebug(`🎉 Converted object to ${allCases.length} cases`, 'success');
+                    showNotification(`Successfully loaded ${allCases.length} cases from backend!`, 'success');
+                } else {
+                    addDebug('❌ Unexpected response format, using demo data', 'error');
+                    throw new Error('Unexpected response format');
+                }
+                
+                // Hide connection status on success
+                document.getElementById('connectionStatus').style.display = 'none';
+                
+            } catch (error) {
+                addDebug(`💥 Error loading cases: ${error.message}`, 'error');
+                if (error.response) {
+                    addDebug(`🔧 Response data: ${JSON.stringify(error.response.data)}`, 'error');
+                }
+                showNotification('Failed to load cases from backend. Using demo data.', 'warning');
+                useDemoData();
+            }
+            
+            updateDashboard();
+        }
+
+        // Use demo data
+        function useDemoData() {
+            addDebug('🔄 Loading demo cases for testing');
+            
+            allCases = [
+                {
+                    _id: 'demo-1',
+                    caseId: 'CP-2024-001',
+                    patient: 'John Smith',
+                    age: 28,
+                    doctor: 'Dr. Hilda Naeimi',
+                    status: 'Pending Treatment Plan',
+                    orderDate: '2024-01-15',
+                    instructions: 'Patient requires comprehensive treatment plan'
+                },
+                {
+                    _id: 'demo-2', 
+                    caseId: 'CP-2024-002',
+                    patient: 'Sarah Johnson',
+                    age: 32,
+                    doctor: 'Dr. Robert Brown',
+                    status: 'Pending Approval',
+                    orderDate: '2024-01-16',
+                    instructions: 'Urgent case with crowding issues'
+                },
+                {
+                    _id: 'demo-3',
+                    caseId: 'CP-2024-003',
+                    patient: 'Mike Wilson',
+                    age: 45,
+                    doctor: 'Dr. Emily Chen',
+                    status: 'Revision Requested',
+                    orderDate: '2024-01-17',
+                    instructions: 'Doctor requested minor adjustments'
+                },
+                {
+                    _id: 'demo-4',
+                    caseId: 'CP-2024-004',
+                    patient: 'Lisa Davis',
+                    age: 29,
+                    doctor: 'Dr. James Miller',
+                    status: 'On Hold',
+                    orderDate: '2024-01-18',
+                    instructions: 'Waiting for patient confirmation'
+                },
+                {
+                    _id: 'demo-5',
+                    caseId: 'CP-2024-005',
+                    patient: 'Tom Anderson',
+                    age: 35,
+                    doctor: 'Dr. Maria Garcia',
+                    status: 'Approved',
+                    orderDate: '2024-01-19',
+                    instructions: 'Case approved and in production'
+                },
+                {
+                    _id: 'demo-6',
+                    caseId: 'CP-2024-006',
+                    patient: 'Emma Thompson',
+                    age: 26,
+                    doctor: 'Dr. David Wilson',
+                    status: 'New Case',
+                    orderDate: '2024-01-20',
+                    instructions: 'Initial assessment required'
+                },
+                {
+                    _id: 'demo-7',
+                    caseId: 'CP-2024-007',
+                    patient: 'Alex Rodriguez',
+                    age: 31,
+                    doctor: 'Dr. Sarah Kim',
+                    status: 'Pending Scan Review',
+                    orderDate: '2024-01-21',
+                    instructions: 'Digital scans need verification'
+                }
+            ];
+            
+            addDebug(`📊 Loaded ${allCases.length} demo cases`, 'success');
+            showNotification(`Loaded ${allCases.length} demo cases for testing`, 'info');
+            updateDashboard();
+        }
+
+        // Update the entire dashboard
+        function updateDashboard() {
+            addDebug('🔄 Updating dashboard with ' + allCases.length + ' cases');
+            
+            // Update stats
+            document.getElementById('totalCases').textContent = allCases.length;
+            
+            const pendingCount = allCases.filter(isPendingCase).length;
+            const revisionCount = allCases.filter(isRevisionCase).length;
+            const holdCount = allCases.filter(isHoldCase).length;
+            const cancelledCount = allCases.filter(isCancelledCase).length;
+            
+            document.getElementById('pendingCases').textContent = pendingCount;
+            document.getElementById('revisionCases').textContent = revisionCount;
+            document.getElementById('holdCases').textContent = holdCount;
+            document.getElementById('cancelledCases').textContent = cancelledCount;
+            
+            addDebug(`📊 Stats - Total: ${allCases.length}, Pending: ${pendingCount}, Revision: ${revisionCount}, Hold: ${holdCount}, Cancelled: ${cancelledCount}`);
+            
+            // Update pending cases list
+            updatePendingCasesList();
+        }
+
+        // Case filtering functions - SIMPLIFIED AND RELIABLE
+        function isPendingCase(caseItem) {
+            if (!caseItem.status) return true;
+            
+            const status = (caseItem.status || '').toString().toLowerCase().trim();
+            
+            // EXCLUDE only clearly final statuses
+            const finalStatuses = ['approved', 'completed', 'cancelled', 'rejected', 'finished', 'done'];
+            
+            // If it's a final status, exclude it
+            for (let finalStatus of finalStatuses) {
+                if (status.includes(finalStatus)) {
+                    return false;
+                }
+            }
+            
+            // INCLUDE everything else
+            return true;
+        }
+
+        function isRevisionCase(caseItem) {
+            const status = (caseItem.status || '').toString().toLowerCase().trim();
+            return status.includes('revision');
+        }
+
+        function isHoldCase(caseItem) {
+            const status = (caseItem.status || '').toString().toLowerCase().trim();
+            return status.includes('hold') || status.includes('paused');
+        }
+
+        function isCancelledCase(caseItem) {
+            const status = (caseItem.status || '').toString().toLowerCase().trim();
+            return status.includes('cancelled') || status.includes('canceled') || status.includes('rejected');
+        }
+
+        // Update pending cases list
+        function updatePendingCasesList() {
+            const pendingCasesList = document.getElementById('pendingCasesList');
+            const pendingCases = allCases.filter(isPendingCase);
+            
+            addDebug(`📝 Displaying ${pendingCases.length} pending cases`);
+            
+            document.getElementById('pendingCount').textContent = pendingCases.length;
+            
+            if (pendingCases.length === 0) {
+                pendingCasesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-upload"></i>
+                        <h3>No Pending Cases</h3>
+                        <p>All cases have been processed or are in other status categories.</p>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="loadCases()">
+                                <i class="fas fa-sync-alt"></i> Refresh Data
+                            </button>
+                            <button class="btn btn-warning" onclick="useDemoData()" style="margin-left: 10px;">
+                                <i class="fas fa-desktop"></i> Load Demo Data
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            pendingCasesList.innerHTML = pendingCases.map(caseItem => {
+                const caseId = caseItem.caseId || caseItem._id || 'Unknown ID';
+                const patient = caseItem.patient || 'Unknown Patient';
+                const dentist = caseItem.doctor || 'Unknown Dentist';
+                const status = caseItem.status || 'Pending';
+                const orderDate = caseItem.orderDate ? new Date(caseItem.orderDate).toLocaleDateString() : 'Unknown Date';
+                
+                return `
+                    <div class="case-item">
+                        <div class="case-info">
+                            <div class="case-id">${caseId}</div>
+                            <div class="case-patient">Patient: ${patient}</div>
+                            <div class="case-dentist">Dentist: ${dentist}</div>
+                            <div class="case-date">Order Date: ${orderDate}</div>
+                        </div>
+                        <div class="case-status status-pending">${status}</div>
+                        <div class="case-actions">
+                            <button class="btn btn-primary btn-sm" onclick="viewCase('${caseItem._id}')" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="uploadFiles('${caseItem._id}')" title="Upload Files">
+                                <i class="fas fa-upload"></i>
+                            </button>
+                            <button class="btn btn-info btn-sm" onclick="contactDentist('${dentist}')" title="Contact Dentist">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            addDebug('✅ Pending cases list updated successfully', 'success');
+        }
+
+        // Navigation functions
+        function showAllCases() {
+            alert(`Total Cases: ${allCases.length}\n\nThis would show all cases in a real implementation.`);
+        }
+
+        function showPendingCases() {
+            const pendingCases = allCases.filter(isPendingCase);
+            alert(`Pending Cases: ${pendingCases.length}\n\nThese cases need your attention.`);
+        }
+
+        function showRevisionCases() {
+            const revisionCases = allCases.filter(isRevisionCase);
+            alert(`Revision Cases: ${revisionCases.length}\n\nThese cases require revisions.`);
+        }
+
+        function showHoldCases() {
+            const holdCases = allCases.filter(isHoldCase);
+            alert(`Hold Cases: ${holdCases.length}\n\nThese cases are currently on hold.`);
+        }
+
+        function showCancelledCases() {
+            const cancelledCases = allCases.filter(isCancelledCase);
+            alert(`Cancelled Cases: ${cancelledCases.length}\n\nThese cases have been cancelled.`);
+        }
+
+        // Action functions
+        function viewCase(caseId) {
+            const caseItem = allCases.find(c => c._id === caseId);
+            if (caseItem) {
+                const details = `
+Case Details:
+
+ID: ${caseItem.caseId || 'Unknown'}
+Patient: ${caseItem.patient || 'Unknown'}
+Age: ${caseItem.age || 'Unknown'}
+Dentist: ${caseItem.doctor || 'Unknown'}
+Status: ${caseItem.status || 'Unknown'}
+Order Date: ${caseItem.orderDate || 'Unknown'}
+
+Instructions:
+${caseItem.instructions || 'No special instructions provided.'}
+                `;
+                alert(details);
+            }
+        }
+
+        function uploadFiles(caseId) {
+            const caseItem = allCases.find(c => c._id === caseId);
+            if (caseItem) {
+                showNotification(`Upload interface would open for case: ${caseItem.caseId}`, 'info');
+            }
+        }
+
+        function contactDentist(dentistName) {
+            showNotification(`Contact form would open for: ${dentistName}`, 'info');
+        }
+
+        // Debug functions
+        function addDebug(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.push({timestamp, message, type});
+            
+            // Keep only last 50 debug messages
+            if (debugLog.length > 50) {
+                debugLog.shift();
+            }
+            
+            if (document.getElementById('debugPanel').style.display !== 'none') {
+                updateDebugPanel();
+            }
+            
+            // Also log to browser console
+            const consoleMethod = type === 'error' ? 'error' : type === 'warning' ? 'warn' : 'log';
+            console[consoleMethod](`[${timestamp}] ${message}`);
+        }
+
+        function updateDebugPanel() {
+            const debugContent = document.getElementById('debugContent');
+            debugContent.innerHTML = debugLog.map(item => `
+                <div class="debug-item debug-${item.type}">
+                    [${item.timestamp}] ${item.message}
+                </div>
+            `).join('');
+            debugContent.scrollTop = debugContent.scrollHeight;
+        }
+
+        function showDebugInfo() {
+            document.getElementById('debugPanel').style.display = 'block';
+            updateDebugPanel();
+            addDebug('🔧 Debug panel opened');
+        }
+
+        function hideDebugInfo() {
+            document.getElementById('debugPanel').style.display = 'none';
+            addDebug('🔧 Debug panel closed');
+        }
+
+        function hideConnectionStatus() {
+            document.getElementById('connectionStatus').style.display = 'none';
+            addDebug('🔧 Connection status hidden');
+        }
+
+        // Utility functions
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            notificationText.textContent = message;
+            notification.className = 'notification';
+            
+            if (type === 'error') {
+                notification.classList.add('error');
+            } else if (type === 'warning') {
+                notification.classList.add('warning');
+            } else if (type === 'info') {
+                notification.classList.add('info');
+            }
+            
+            notification.classList.add('active');
+            
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 4000);
+        }
+
+        function logout() {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'block';
+            showNotification('Logged out successfully', 'info');
+            addDebug('👋 User logged out');
+        }
+
+        // Initialize debug log
+        addDebug('🔧 ClearPro Aligner Admin Dashboard loaded');
+        addDebug('🔧 System ready - please login to continue');
+    </script>
+</body>
+</html>
