@@ -1,0 +1,4169 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClearPro Aligner - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #2c7fb8 0%, #1e5a8a 100%);
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-logo i {
+            font-size: 3rem;
+            color: #2c7fb8;
+            margin-bottom: 15px;
+        }
+        
+        .login-logo h1 {
+            color: #2c7fb8;
+            font-size: 1.8rem;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .login-form input:focus {
+            outline: none;
+            border-color: #2c7fb8;
+            box-shadow: 0 0 0 3px rgba(44, 127, 184, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2c7fb8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .login-btn:hover {
+            background: #1e5a8a;
+        }
+        
+        .login-error {
+            color: #dc3545;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: #2c7fb8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1001;
+            font-size: 1.2rem;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .sidebar-header i {
+            font-size: 2rem;
+            color: #2c7fb8;
+        }
+        
+        .sidebar-header h1 {
+            color: #2c7fb8;
+            font-size: 1.3rem;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-title {
+            padding: 0 20px 10px;
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            background: #f8f9fa;
+            color: #2c7fb8;
+        }
+        
+        .nav-item.active {
+            background: #e7f3ff;
+            color: #2c7fb8;
+            border-left-color: #2c7fb8;
+        }
+        
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .nav-count {
+            margin-left: auto;
+            background: #e9ecef;
+            color: #6c757d;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .nav-item.active .nav-count {
+            background: #2c7fb8;
+            color: white;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c7fb8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        /* Dashboard Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #2c7fb8;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-card.pending {
+            border-left-color: #ffc107;
+        }
+        
+        .stat-card.revision {
+            border-left-color: #dc3545;
+        }
+        
+        .stat-card.hold {
+            border-left-color: #17a2b8;
+        }
+        
+        .stat-card.cancelled {
+            border-left-color: #6c757d;
+        }
+        
+        .stat-card.doctor-pending {
+            border-left-color: #6f42c1;
+        }
+        
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c7fb8;
+        }
+        
+        .stat-card.pending .stat-number {
+            color: #ffc107;
+        }
+        
+        .stat-card.revision .stat-number {
+            color: #dc3545;
+        }
+        
+        .stat-card.hold .stat-number {
+            color: #17a2b8;
+        }
+        
+        .stat-card.cancelled .stat-number {
+            color: #6c757d;
+        }
+        
+        .stat-card.doctor-pending .stat-number {
+            color: #6f42c1;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        /* Cases Section */
+        .section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            padding: 20px 25px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c7fb8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-count {
+            background: #2c7fb8;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            color: #6c757d;
+        }
+        
+        .search-box input {
+            padding: 8px 15px 8px 35px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 250px;
+            font-size: 0.9rem;
+        }
+        
+        .cases-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .case-item {
+            padding: 18px 25px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .case-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .case-item:last-child {
+            border-bottom: none;
+        }
+        
+        .case-info {
+            flex: 1;
+        }
+        
+        .case-id {
+            font-weight: bold;
+            color: #2c7fb8;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .case-patient {
+            margin-bottom: 3px;
+            font-weight: 500;
+        }
+        
+        .case-dentist {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .case-date {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        
+        .case-status {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-revision {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-hold {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-cancelled {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-completed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-doctor-pending {
+            background: #e2e3ff;
+            color: #2c1e8a;
+        }
+        
+        .case-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary {
+            background: #2c7fb8;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e5a8a;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-purple {
+            background: #6f42c1;
+            color: white;
+        }
+        
+        .btn-purple:hover {
+            background: #5a36a1;
+        }
+        
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #6c757d;
+        }
+        
+        .empty-state p {
+            margin-bottom: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Dashboard Recent Cases */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .recent-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .recent-case-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .recent-case-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .recent-case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .recent-case-id {
+            font-weight: bold;
+            color: #2c7fb8;
+            font-size: 1.1rem;
+        }
+        
+        .recent-case-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .recent-case-patient {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .recent-case-dentist {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .recent-case-date {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+        
+        .recent-case-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 95%;
+            max-width: 1000px;
+            max-height: 95vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c7fb8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.2s;
+        }
+        
+        .modal-close:hover {
+            color: #dc3545;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            background: #f8f9fa;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-weight: 500;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .tab.active {
+            color: #2c7fb8;
+            border-bottom-color: #2c7fb8;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Case Details Grid */
+        .case-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-group {
+            margin-bottom: 15px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .detail-value {
+            font-size: 1rem;
+            color: #333;
+        }
+        
+        .instructions-box {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        
+        /* File Upload Section */
+        .upload-section {
+            margin-bottom: 30px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: #2c7fb8;
+            background-color: #f8f9fa;
+        }
+        
+        .upload-area.dragover {
+            border-color: #2c7fb8;
+            background-color: #e7f3ff;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-icon {
+            color: #6c757d;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        /* Enhanced File Viewer Modal */
+        .file-viewer-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .file-viewer-modal.active {
+            display: flex;
+        }
+        
+        .file-viewer-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .file-viewer-header {
+            padding: 15px 20px;
+            background: #2c7fb8;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .file-viewer-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .file-viewer-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .file-viewer-body {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            background: #f8f9fa;
+        }
+        
+        .file-preview-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            position: relative;
+        }
+        
+        .file-preview {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .file-info-panel {
+            width: 100%;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .file-info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .file-info-label {
+            font-weight: 600;
+            width: 120px;
+            color: #666;
+        }
+        
+        .file-info-value {
+            flex: 1;
+        }
+        
+        .file-actions-panel {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        
+        .file-viewer-modal.fullscreen .file-viewer-content {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+        }
+        
+        /* Web Viewer Modal */
+        .webviewer-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .webviewer-controls {
+            padding: 10px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .webviewer-status {
+            padding: 8px 15px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* Fullscreen styles for web viewer */
+        .file-viewer-modal.fullscreen .file-viewer-content {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+        }
+        
+        .file-viewer-modal.fullscreen .webviewer-controls {
+            padding: 15px;
+            background: #2c7fb8;
+            color: white;
+        }
+        
+        .file-viewer-modal.fullscreen .webviewer-controls .btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .file-viewer-modal.fullscreen .webviewer-controls .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .file-viewer-modal.fullscreen .webviewer-controls .form-control {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Doctor Portal Section */
+        .doctor-portal-section {
+            margin-bottom: 30px;
+        }
+        
+        .doctor-portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .doctor-case-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.2s;
+            border-left: 4px solid #6f42c1;
+        }
+        
+        .doctor-case-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .doctor-case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .doctor-case-id {
+            font-weight: bold;
+            color: #2c7fb8;
+            font-size: 1.1rem;
+        }
+        
+        .doctor-case-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #e2e3ff;
+            color: #2c1e8a;
+        }
+        
+        .doctor-case-patient {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .doctor-case-dentist {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .doctor-case-date {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+        
+        .doctor-case-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Form Controls */
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #2c7fb8;
+            box-shadow: 0 0 0 3px rgba(44, 127, 184, 0.1);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        /* Invoice Styles */
+        .invoice-actions-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-table th,
+        .invoice-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .invoice-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .invoice-table .actions-cell {
+            width: 100px;
+            text-align: center;
+        }
+        
+        .invoice-totals {
+            width: 300px;
+            margin-left: auto;
+        }
+        
+        .invoice-total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .invoice-total-row:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .invoice-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* Add Item Form */
+        .add-item-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        /* Connection Status */
+        .connection-status {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .connection-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .connection-content {
+            padding: 20px;
+        }
+        
+        .debug-panel {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            max-height: 300px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+        
+        .debug-item {
+            margin-bottom: 5px;
+            padding: 3px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .debug-item:last-child {
+            border-bottom: none;
+        }
+        
+        .debug-success {
+            color: #28a745;
+        }
+        
+        .debug-error {
+            color: #dc3545;
+        }
+        
+        .debug-warning {
+            color: #856404;
+        }
+        
+        .debug-info {
+            color: #0c5460;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.active {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .notification.warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .notification.info {
+            background: #17a2b8;
+        }
+        
+        /* User Menu */
+        .user-menu {
+            position: relative;
+        }
+        
+        .btn-user {
+            background: #2c7fb8;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 180px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 5px;
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 12px 15px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-dropdown a:hover {
+            background: #f8f9fa;
+        }
+        
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 5px 0;
+        }
+        
+        /* External Portal Integration */
+        .external-portal-container {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .portal-integration-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .content-area {
+                padding: 20px 15px;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .case-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .case-status {
+                align-self: flex-start;
+                margin-right: 0;
+            }
+            
+            .case-actions {
+                align-self: stretch;
+                justify-content: flex-end;
+            }
+            
+            .recent-cases {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                width: 98%;
+                margin: 10px;
+            }
+            
+            .case-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+            
+            .invoice-totals {
+                width: 100%;
+            }
+            
+            .section-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+            
+            .file-viewer-content {
+                width: 95%;
+                height: 95%;
+            }
+            
+            .webviewer-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .webviewer-controls .input-group {
+                width: 100%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .invoice-actions-row {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .portal-integration-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .top-header {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            
+            .section-header {
+                padding: 15px;
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .case-item {
+                padding: 15px;
+            }
+            
+            .modal-body {
+                padding: 15px;
+            }
+            
+            .modal-footer {
+                padding: 10px 15px;
+                flex-direction: column;
+            }
+            
+            .modal-footer .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .file-viewer-actions {
+                flex-wrap: wrap;
+            }
+            
+            .doctor-case-actions {
+                flex-direction: column;
+            }
+            
+            .invoice-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <div class="login-logo">
+                <i class="fas fa-tooth"></i>
+                <h1>ClearPro Aligner</h1>
+                <p>Admin Dashboard</p>
+            </div>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <div class="login-error" id="loginError">Invalid username or password</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard (Initially Hidden) -->
+    <div id="dashboardPage" style="display: none; width: 100%;">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Notification -->
+        <div class="notification" id="notification">
+            <i class="fas fa-check-circle"></i>
+            <span id="notification-text">Operation completed successfully</span>
+        </div>
+
+        <!-- Case Details Modal -->
+        <div class="modal" id="caseModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <i class="fas fa-file-medical"></i>
+                        <span id="modalCaseId">Case Details</span>
+                    </div>
+                    <button class="modal-close" onclick="closeCaseModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Case details will be populated here -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="saveCaseChanges()">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeCaseModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced File Viewer Modal -->
+        <div class="file-viewer-modal" id="fileViewerModal">
+            <div class="file-viewer-content">
+                <div class="file-viewer-header">
+                    <div class="file-viewer-title" id="fileViewerTitle">File Viewer</div>
+                    <div class="file-viewer-actions">
+                        <button class="btn btn-sm btn-primary" onclick="toggleFullscreen()">
+                            <i class="fas fa-expand"></i> Fullscreen
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="closeFileViewer()">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                    </div>
+                </div>
+                <div class="file-viewer-body" id="fileViewerBody">
+                    <!-- File content will be displayed here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Web Viewer Modal -->
+        <div class="file-viewer-modal" id="webViewerModal">
+            <div class="file-viewer-content">
+                <div class="file-viewer-header">
+                    <div class="file-viewer-title">
+                        <i class="fas fa-globe"></i> 
+                        <span id="webViewerModalTitle">Treatment Plan Web Viewer</span>
+                    </div>
+                    <div class="file-viewer-actions">
+                        <button class="btn btn-sm btn-info" onclick="reloadWebViewer()">
+                            <i class="fas fa-sync-alt"></i> Reload
+                        </button>
+                        <button class="btn btn-sm btn-primary" onclick="toggleWebViewerFullscreen()">
+                            <i class="fas fa-expand"></i> Fullscreen
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="closeWebViewer()">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                    </div>
+                </div>
+                <div class="file-viewer-body">
+                    <div class="webviewer-container">
+                        <div class="webviewer-controls">
+                            <div class="input-group" style="flex: 1;">
+                                <input type="url" class="form-control" id="webViewerUrlInput" 
+                                       placeholder="Enter or paste Web Viewer URL..." 
+                                       style="border-radius: 5px 0 0 5px;">
+                                <button class="btn btn-primary" onclick="loadWebViewerUrl()" 
+                                        style="border-radius: 0 5px 5px 0;">
+                                    <i class="fas fa-arrow-right"></i> Go
+                                </button>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="openInNewTab()">
+                                <i class="fas fa-external-link-alt"></i> New Tab
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="copyCurrentUrl()">
+                                <i class="fas fa-copy"></i> Copy URL
+                            </button>
+                        </div>
+                        <iframe id="webViewerFrame" 
+                                src=""
+                                style="flex: 1; width: 100%; border: none; background: white;"
+                                allowfullscreen>
+                        </iframe>
+                        <div class="webviewer-status">
+                            <i class="fas fa-info-circle"></i>
+                            <span id="webViewerStatus">Ready to load Web Viewer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-tooth"></i>
+                <div>
+                    <h1>ClearPro Aligner</h1>
+                    <div style="font-size: 0.8rem; color: #666;">Admin Dashboard</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-title">Main</div>
+                    <a href="#" class="nav-item active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-title">Cases</div>
+                    <a href="#" class="nav-item" data-section="all-cases">
+                        <i class="fas fa-folder"></i>
+                        <span>All Cases</span>
+                        <span class="nav-count" id="allCasesCount">0</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="pending-cases">
+                        <i class="fas fa-upload"></i>
+                        <span>Pending Upload</span>
+                        <span class="nav-count" id="pendingCasesCount">0</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="revision-cases">
+                        <i class="fas fa-redo"></i>
+                        <span>Revision Requests</span>
+                        <span class="nav-count" id="revisionCasesCount">0</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="hold-cases">
+                        <i class="fas fa-pause-circle"></i>
+                        <span>Cases On Hold</span>
+                        <span class="nav-count" id="holdCasesCount">0</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="cancelled-cases">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Cancelled Cases</span>
+                        <span class="nav-count" id="cancelledCasesCount">0</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="doctor-pending-cases">
+                        <i class="fas fa-stethoscope"></i>
+                        <span>Doctor Portal</span>
+                        <span class="nav-count" id="doctorPendingCasesCount">0</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-title">Integration</div>
+                    <a href="#" class="nav-item" data-section="external-doctor-portal">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>External Doctor Portal</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="api-integration">
+                        <i class="fas fa-plug"></i>
+                        <span>API Integration</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-title">Tools</div>
+                    <a href="#" class="nav-item" data-section="test-connection">
+                        <i class="fas fa-plug"></i>
+                        <span>Test Connection</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="debug-info">
+                        <i class="fas fa-bug"></i>
+                        <span>Debug Info</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <div class="top-header">
+                <div class="page-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span id="pageTitle">Dashboard</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="loadCases()">
+                        <i class="fas fa-sync-alt"></i> <span class="btn-text">Refresh</span>
+                    </button>
+                    <button class="btn btn-info" onclick="testBackendConnection()">
+                        <i class="fas fa-plug"></i> <span class="btn-text">Test Connection</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="btn btn-user" id="userMenuButton">
+                            <i class="fas fa-user-circle"></i> <span class="btn-text" id="userName">Admin</span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="#"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                            <div class="divider"></div>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-area" id="contentArea">
+                <!-- Connection Status -->
+                <div class="connection-status" id="connectionStatus" style="display: none;">
+                    <div class="connection-header">
+                        <div class="section-title">
+                            <i class="fas fa-network-wired"></i> Backend Connection Status
+                        </div>
+                    </div>
+                    <div class="connection-content" id="connectionStatusContent">
+                        <!-- Connection info will appear here -->
+                    </div>
+                </div>
+
+                <!-- Dashboard Content -->
+                <div id="dashboard-content">
+                    <div class="stats">
+                        <div class="stat-card" onclick="showSection('all-cases')">
+                            <div class="stat-number" id="totalCases">0</div>
+                            <div class="stat-label">Total Cases</div>
+                        </div>
+                        <div class="stat-card pending" onclick="showSection('pending-cases')">
+                            <div class="stat-number" id="pendingCases">0</div>
+                            <div class="stat-label">Pending Upload</div>
+                        </div>
+                        <div class="stat-card revision" onclick="showSection('revision-cases')">
+                            <div class="stat-number" id="revisionCases">0</div>
+                            <div class="stat-label">Revision Requests</div>
+                        </div>
+                        <div class="stat-card hold" onclick="showSection('hold-cases')">
+                            <div class="stat-number" id="holdCases">0</div>
+                            <div class="stat-label">Cases On Hold</div>
+                        </div>
+                        <div class="stat-card cancelled" onclick="showSection('cancelled-cases')">
+                            <div class="stat-number" id="cancelledCases">0</div>
+                            <div class="stat-label">Cancelled Cases</div>
+                        </div>
+                        <div class="stat-card doctor-pending" onclick="showSection('doctor-pending-cases')">
+                            <div class="stat-number" id="doctorPendingCases">0</div>
+                            <div class="stat-label">Doctor Portal</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title">
+                                    <i class="fas fa-clock"></i> Recent Cases
+                                </div>
+                                <div class="section-count" id="recentCasesCount">0</div>
+                            </div>
+                            <div class="recent-cases" id="recentCasesList">
+                                <!-- Recent cases will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- All Cases Content -->
+                <div id="all-cases-content" class="section-content" style="display: none;">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-folder"></i> All Cases
+                        </div>
+                        <div class="section-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="caseSearch" placeholder="Search cases...">
+                            </div>
+                        </div>
+                        <div class="section-count" id="allCasesSectionCount">0</div>
+                    </div>
+                    <div class="cases-list" id="allCasesList">
+                        <!-- All cases will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Pending Cases Content -->
+                <div id="pending-cases-content" class="section-content" style="display: none;">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-upload"></i> Cases Pending Upload
+                        </div>
+                        <div class="section-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="pendingSearch" placeholder="Search pending cases...">
+                            </div>
+                        </div>
+                        <div class="section-count" id="pendingCasesSectionCount">0</div>
+                    </div>
+                    <div class="cases-list" id="pendingCasesList">
+                        <!-- Pending cases will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Doctor Portal Cases Content -->
+                <div id="doctor-pending-cases-content" class="section-content" style="display: none;">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-stethoscope"></i> Doctor Portal - Pending Approval
+                        </div>
+                        <div class="section-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="doctorSearch" placeholder="Search doctor cases...">
+                            </div>
+                            <button class="btn btn-info btn-sm" onclick="syncWithExternalPortal()">
+                                <i class="fas fa-sync-alt"></i> Sync with External Portal
+                            </button>
+                        </div>
+                        <div class="section-count" id="doctorPendingCasesSectionCount">0</div>
+                    </div>
+                    <div class="doctor-portal-section">
+                        <div class="doctor-portal-grid" id="doctorPendingCasesList">
+                            <!-- Doctor portal cases will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- External Doctor Portal Integration -->
+                <div id="external-doctor-portal-content" class="section-content" style="display: none;">
+                    <div class="portal-integration-header">
+                        <div class="section-title">
+                            <i class="fas fa-external-link-alt"></i> External Doctor Portal
+                        </div>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" onclick="openExternalPortal()">
+                                <i class="fas fa-external-link-alt"></i> Open in New Tab
+                            </button>
+                            <button class="btn btn-info" onclick="refreshExternalPortal()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                            <button class="btn btn-success" onclick="syncWithExternalPortal()">
+                                <i class="fas fa-plug"></i> Sync Cases
+                            </button>
+                        </div>
+                    </div>
+                    <iframe class="external-portal-container" 
+                            id="externalDoctorPortal"
+                            src="https://clearproaligner-portal1.onrender.com"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+                
+                <!-- API Integration Section -->
+                <div id="api-integration-content" class="section-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-title">
+                                <i class="fas fa-plug"></i> API Integration Settings
+                            </div>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div class="detail-group">
+                                <div class="detail-label">External Doctor Portal URL</div>
+                                <div class="detail-value">
+                                    <input type="url" class="form-control" id="externalPortalUrl" 
+                                           value="https://clearproaligner-portal1.onrender.com"
+                                           placeholder="Enter external portal URL">
+                                </div>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <div class="detail-label">API Endpoints</div>
+                                <div class="detail-value">
+                                    <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace;">
+                                        <div><strong>GET</strong> /api/cases - Fetch all cases</div>
+                                        <div><strong>POST</strong> /api/cases - Create new case</div>
+                                        <div><strong>PUT</strong> /api/cases/:id - Update case</div>
+                                        <div><strong>POST</strong> /api/cases/:id/submit - Submit to doctor portal</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <button class="btn btn-primary" onclick="testExternalPortalConnection()">
+                                    <i class="fas fa-plug"></i> Test External Portal Connection
+                                </button>
+                                <button class="btn btn-success" onclick="syncAllCases()" style="margin-left: 10px;">
+                                    <i class="fas fa-sync-alt"></i> Sync All Cases
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Debug Info Content -->
+                <div id="debug-info-content" class="section-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-title">
+                                <i class="fas fa-bug"></i> Debug Information
+                            </div>
+                            <button class="btn btn-sm" onclick="hideDebugInfo()">
+                                <i class="fas fa-times"></i> Hide
+                            </button>
+                        </div>
+                        <div class="debug-panel" id="debugContent" style="margin: 0; border: none; border-radius: 0;">
+                            <!-- Debug info will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const BACKEND_URLS = [
+            'https://clearpro-aligner-portal-backend.onrender.com/api/cases',
+            'https://clearpro-aligner-portal-backend.onrender.com/api',
+            'https://clearpro-aligner-portal-backend.onrender.com/cases',
+            'http://localhost:3000/api/cases'
+        ];
+        
+        const EXTERNAL_DOCTOR_PORTAL_URL = 'https://clearproaligner-portal1.onrender.com';
+        
+        // Application state
+        let allCases = [];
+        let debugLog = [];
+        let currentSection = 'dashboard';
+        let uploadedFiles = [];
+        let currentCaseId = null;
+        let currentBackendIndex = 0;
+        let isFullscreen = false;
+        let isLoggedIn = false;
+        let currentUser = null;
+        let editingInvoiceItemIndex = -1;
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupLogin();
+            setupNavigation();
+            setupSearch();
+            setupUserMenu();
+            setupMobileMenu();
+            
+            // Check if user is already logged in
+            checkLoginStatus();
+        });
+        
+        // Initialize application
+        function initializeApp() {
+            addDebug('🚀 ClearPro Aligner Dashboard initialized');
+            addDebug(`🌐 External Doctor Portal: ${EXTERNAL_DOCTOR_PORTAL_URL}`);
+            addDebug('💡 Testing backend connection...');
+        }
+        
+        // Setup login functionality
+        function setupLogin() {
+            const loginForm = document.getElementById('loginForm');
+            const loginError = document.getElementById('loginError');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Simple authentication (in a real app, this would be server-side)
+                if (username === 'admin' && password === 'password') {
+                    loginSuccess(username);
+                } else {
+                    loginError.style.display = 'block';
+                }
+            });
+        }
+        
+        // Check if user is already logged in
+        function checkLoginStatus() {
+            const savedUser = localStorage.getItem('clearproUser');
+            if (savedUser) {
+                loginSuccess(savedUser);
+            }
+        }
+        
+        // Handle successful login
+        function loginSuccess(username) {
+            isLoggedIn = true;
+            currentUser = username;
+            
+            // Save login state
+            localStorage.setItem('clearproUser', username);
+            
+            // Show dashboard, hide login
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboardPage').style.display = 'flex';
+            
+            // Update UI with username
+            document.getElementById('userName').textContent = username;
+            
+            // Start by testing backend connection
+            testBackendConnection();
+            
+            addDebug(`✅ User ${username} logged in successfully`);
+            showNotification(`Welcome back, ${username}!`, 'success');
+        }
+        
+        // Logout function
+        function logout() {
+            isLoggedIn = false;
+            currentUser = null;
+            
+            // Clear login state
+            localStorage.removeItem('clearproUser');
+            
+            // Show login, hide dashboard
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+            
+            // Reset login form
+            document.getElementById('loginForm').reset();
+            document.getElementById('loginError').style.display = 'none';
+            
+            addDebug('👋 User logged out');
+            showNotification('You have been logged out', 'info');
+        }
+        
+        // Setup mobile menu
+        function setupMobileMenu() {
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            mobileToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('mobile-open');
+            });
+            
+            // Close mobile menu when clicking on a nav item
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    sidebar.classList.remove('mobile-open');
+                });
+            });
+        }
+        
+        // Setup sidebar navigation
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active state
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show the selected section
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                });
+            });
+        }
+        
+        // Setup search functionality
+        function setupSearch() {
+            const searchInputs = document.querySelectorAll('.search-box input');
+            searchInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const section = currentSection;
+                    updateCasesList(section);
+                });
+            });
+        }
+        
+        // Setup user menu
+        function setupUserMenu() {
+            document.getElementById('userMenuButton').addEventListener('click', function() {
+                document.getElementById('userDropdown').classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            window.addEventListener('click', function(e) {
+                if (!e.target.matches('#userMenuButton')) {
+                    const dropdown = document.getElementById('userDropdown');
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            });
+        }
+        
+        // Show a specific section
+        function showSection(section) {
+            // Hide all section contents
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.getElementById('dashboard-content').style.display = 'none';
+            document.getElementById('connectionStatus').style.display = 'none';
+            
+            // Show the selected section
+            if (section === 'dashboard') {
+                document.getElementById('dashboard-content').style.display = 'block';
+                document.getElementById('pageTitle').textContent = 'Dashboard';
+            } else {
+                document.getElementById(section + '-content').style.display = 'block';
+                document.getElementById('pageTitle').textContent = formatSectionName(section);
+            }
+            
+            // Update current section
+            currentSection = section;
+            
+            // Load section-specific data if needed
+            if (section.includes('cases')) {
+                updateCasesList(section);
+                
+                // Debug info for doctor portal
+                if (section === 'doctor-pending-cases') {
+                    addDebug(`🔍 Loading Doctor Portal: ${allCases.filter(isDoctorPendingCase).length} cases found`);
+                }
+            } else if (section === 'debug-info') {
+                updateDebugPanel();
+            } else if (section === 'external-doctor-portal') {
+                // Ensure the external portal iframe is loaded
+                setTimeout(() => {
+                    const iframe = document.getElementById('externalDoctorPortal');
+                    if (iframe && !iframe.src.includes(EXTERNAL_DOCTOR_PORTAL_URL)) {
+                        iframe.src = EXTERNAL_DOCTOR_PORTAL_URL;
+                    }
+                }, 100);
+            }
+            
+            addDebug(`📂 Switched to section: ${section}`);
+        }
+        
+        // Format section name for display
+        function formatSectionName(section) {
+            return section.split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+        
+        // Test backend connection
+        async function testBackendConnection() {
+            showNotification('Testing backend connection...', 'info');
+            addDebug('🔌 Starting backend connection test...');
+            
+            document.getElementById('connectionStatus').style.display = 'block';
+            const statusContent = document.getElementById('connectionStatusContent');
+            statusContent.innerHTML = '<div class="debug-info">Testing connection to backend servers...</div>';
+            
+            let connected = false;
+            let workingUrl = '';
+            let responseData = null;
+            
+            // Test each backend URL
+            for (let i = 0; i < BACKEND_URLS.length; i++) {
+                const url = BACKEND_URLS[i];
+                addDebug(`📡 Testing URL ${i + 1}: ${url}`);
+                
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    addDebug(`📊 Response status: ${response.status}`, 'success');
+                    
+                    if (response.status === 200) {
+                        connected = true;
+                        workingUrl = url;
+                        currentBackendIndex = i;
+                        responseData = await response.json();
+                        addDebug(`✅ SUCCESS: Backend connected at ${url}`, 'success');
+                        break;
+                    } else {
+                        addDebug(`⚠️ Response status ${response.status} from ${url}`, 'warning');
+                    }
+                } catch (error) {
+                    addDebug(`❌ Connection failed: ${error.message}`, 'error');
+                }
+            }
+            
+            // Display connection results
+            if (connected) {
+                statusContent.innerHTML = `
+                    <div class="debug-success">
+                        <strong>✅ BACKEND CONNECTED SUCCESSFULLY</strong><br>
+                        <strong>URL:</strong> ${workingUrl}<br>
+                        <strong>Status:</strong> Ready to load cases<br>
+                        <strong>Response Type:</strong> ${Array.isArray(responseData) ? 'Array' : typeof responseData}
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-success" onclick="loadCases()">
+                            <i class="fas fa-download"></i> Load Cases Now
+                        </button>
+                        <button class="btn btn-info" onclick="hideConnectionStatus()" style="margin-left: 10px;">
+                            <i class="fas fa-eye-slash"></i> Hide Status
+                        </button>
+                    </div>
+                `;
+                showNotification('Backend connected successfully! Loading cases...', 'success');
+                loadCases();
+            } else {
+                statusContent.innerHTML = `
+                    <div class="debug-error">
+                        <strong>❌ BACKEND CONNECTION FAILED</strong><br>
+                        All connection attempts failed. This could be due to:<br>
+                        • Backend server is down<br>
+                        • Network connectivity issues<br>
+                        • CORS restrictions<br>
+                        • Invalid API endpoints
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-warning" onclick="useDemoData()">
+                            <i class="fas fa-desktop"></i> Use Demo Data
+                        </button>
+                        <button class="btn btn-primary" onclick="testBackendConnection()" style="margin-left: 10px;">
+                            <i class="fas fa-sync-alt"></i> Retry Connection
+                        </button>
+                    </div>
+                `;
+                showNotification('Backend connection failed. You can use demo data.', 'warning');
+            }
+        }
+        
+        // Load cases from backend
+        async function loadCases() {
+            showNotification('Loading cases from backend...', 'info');
+            addDebug('🔍 Loading cases from backend...');
+            
+            const backendUrl = BACKEND_URLS[currentBackendIndex];
+            
+            try {
+                addDebug(`📡 Fetching from: ${backendUrl}`);
+                
+                const response = await fetch(backendUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                addDebug('✅ API response received successfully', 'success');
+                addDebug(`📊 Response status: ${response.status}`);
+                
+                const data = await response.json();
+                addDebug(`📦 Response data type: ${typeof data}`);
+                addDebug(`🔢 Is array: ${Array.isArray(data)}`);
+                
+                // Handle different response formats
+                if (Array.isArray(data)) {
+                    allCases = data;
+                    addDebug(`🎉 Loaded ${allCases.length} real cases from backend`, 'success');
+                    showNotification(`Successfully loaded ${allCases.length} cases from backend!`, 'success');
+                } else if (data && Array.isArray(data.cases)) {
+                    allCases = data.cases;
+                    addDebug(`🎉 Loaded ${allCases.length} cases from nested response`, 'success');
+                    showNotification(`Successfully loaded ${allCases.length} cases from backend!`, 'success');
+                } else if (data && Array.isArray(data.data)) {
+                    allCases = data.data;
+                    addDebug(`🎉 Loaded ${allCases.length} cases from data property`, 'success');
+                    showNotification(`Successfully loaded ${allCases.length} cases from backend!`, 'success');
+                } else if (data && typeof data === 'object') {
+                    // Convert object to array if needed
+                    allCases = Object.values(data);
+                    addDebug(`🎉 Converted object to ${allCases.length} cases`, 'success');
+                    showNotification(`Successfully loaded ${allCases.length} cases from backend!`, 'success');
+                } else {
+                    addDebug('❌ Unexpected response format, using demo data', 'error');
+                    throw new Error('Unexpected response format');
+                }
+                
+                // Hide connection status on success
+                document.getElementById('connectionStatus').style.display = 'none';
+                
+            } catch (error) {
+                addDebug(`💥 Error loading cases: ${error.message}`, 'error');
+                showNotification('Failed to load cases from backend. Using demo data.', 'warning');
+                useDemoData();
+            }
+            
+            updateDashboard();
+            if (currentSection.includes('cases')) {
+                updateCasesList(currentSection);
+            }
+        }
+        
+        // Use demo data as fallback
+        function useDemoData() {
+            addDebug('🔄 Loading demo cases for testing');
+            
+            allCases = [
+                {
+                    _id: 'demo-1',
+                    caseId: 'CP-2024-001',
+                    patient: 'Farah',
+                    age: 24,
+                    doctor: 'Dr. Hilda Naeimi',
+                    status: 'Pending Treatment Plan',
+                    orderDate: '2025-11-09',
+                    instructions: 'Patient requires comprehensive treatment plan. Moderate crowding in lower anterior region.',
+                    attachments: ['xray_front.jpg', 'photos_side.jpg'],
+                    impressionType: 'physical',
+                    archSelection: 'both',
+                    selectedTeeth: '25, 44',
+                    treatmentPlan: {
+                        notes: 'Patient has moderate crowding.'
+                    },
+                    invoice: {
+                        items: [
+                            { description: 'Initial Consultation', amount: 150 },
+                            { description: '3D Scan & Impressions', amount: 250 }
+                        ],
+                        total: 400
+                    },
+                    progress: {
+                        stage: 0,
+                        totalStages: 24,
+                        nextAppointment: '2025-12-15',
+                        notes: 'Waiting for treatment plan approval.'
+                    }
+                },
+                {
+                    _id: 'demo-2', 
+                    caseId: 'CP-2024-002',
+                    patient: 'Sarah Johnson',
+                    age: 32,
+                    doctor: 'Dr. Robert Brown',
+                    status: 'Revision Requested',
+                    orderDate: '2024-01-16',
+                    instructions: 'Urgent case with crowding issues. Need digital scans.',
+                    attachments: ['scan_upper.stl', 'scan_lower.stl'],
+                    impressionType: 'digital',
+                    archSelection: 'both',
+                    selectedTeeth: '14, 15, 24, 25',
+                    treatmentPlan: {
+                        notes: 'Complex case requiring multiple refinements.'
+                    },
+                    invoice: {
+                        items: [
+                            { description: 'Initial Consultation', amount: 150 },
+                            { description: 'Digital Scan Processing', amount: 300 }
+                        ],
+                        total: 450
+                    },
+                    progress: {
+                        stage: 5,
+                        totalStages: 36,
+                        nextAppointment: '2024-02-01',
+                        notes: 'Revision needed for stage 6 aligners.'
+                    }
+                },
+                {
+                    _id: 'demo-3',
+                    caseId: 'CP-2024-003',
+                    patient: 'Michael Chen',
+                    age: 45,
+                    doctor: 'Dr. Amanda Rodriguez',
+                    status: 'On Hold',
+                    orderDate: '2024-01-10',
+                    instructions: 'Patient has medical condition requiring clearance before proceeding.',
+                    attachments: ['medical_clearance.pdf'],
+                    impressionType: 'physical',
+                    archSelection: 'upper',
+                    selectedTeeth: '11, 12, 21, 22',
+                    treatmentPlan: {
+                        notes: 'Standard case with minor corrections.'
+                    },
+                    invoice: {
+                        items: [
+                            { description: 'Initial Consultation', amount: 150 }
+                        ],
+                        total: 150
+                    },
+                    progress: {
+                        stage: 0,
+                        totalStages: 28,
+                        nextAppointment: 'TBD',
+                        notes: 'Waiting for medical clearance.'
+                    }
+                },
+                {
+                    _id: 'demo-4',
+                    caseId: 'CP-2024-004',
+                    patient: 'Emily Wilson',
+                    age: 29,
+                    doctor: 'Dr. James Anderson',
+                    status: 'Pending Doctor Approval', // This should appear in doctor portal
+                    orderDate: '2024-01-22',
+                    instructions: 'Patient has mild spacing issues. Requires aligners with attachments.',
+                    attachments: ['treatment_plan.pdf', 'clincheck_link.txt'],
+                    impressionType: 'digital',
+                    archSelection: 'both',
+                    selectedTeeth: '13, 23, 33, 43',
+                    treatmentPlan: {
+                        notes: 'Simple case with predictable outcome.',
+                        webViewerUrl: 'https://vision.portal.softsmile.com/webviewer/middle-east-dental-lab?t=nR%2FbbLhySN7q%2BPSCJA%2FkAVzNuOvAevV2DJKDxpxizMeUYHkF0X',
+                        submittedDate: '2024-01-22'
+                    },
+                    invoice: {
+                        items: [
+                            { description: 'Initial Consultation', amount: 150 },
+                            { description: 'Treatment Plan Development', amount: 350 }
+                        ],
+                        total: 500,
+                        submittedDate: '2024-01-22'
+                    },
+                    progress: {
+                        stage: 0,
+                        totalStages: 20,
+                        nextAppointment: '2024-02-20',
+                        notes: 'Submitted to doctor portal for approval.'
+                    }
+                },
+                {
+                    _id: 'demo-5',
+                    caseId: 'CP-2024-005',
+                    patient: 'David Kim',
+                    age: 35,
+                    doctor: 'Dr. Lisa Wang',
+                    status: 'Pending Doctor Approval with Invoice', // This should also appear
+                    orderDate: '2024-01-25',
+                    instructions: 'Comprehensive treatment with attachments required.',
+                    attachments: ['scan_complete.stl'],
+                    impressionType: 'digital',
+                    archSelection: 'both',
+                    selectedTeeth: 'All',
+                    treatmentPlan: {
+                        notes: 'Full mouth reconstruction required.',
+                        submittedDate: '2024-01-25'
+                    },
+                    invoice: {
+                        items: [
+                            { description: 'Initial Consultation', amount: 150 },
+                            { description: 'Comprehensive Scan', amount: 400 },
+                            { description: 'Treatment Plan', amount: 600 }
+                        ],
+                        total: 1150,
+                        submittedDate: '2024-01-25'
+                    },
+                    progress: {
+                        stage: 0,
+                        totalStages: 40,
+                        nextAppointment: '2024-03-01',
+                        notes: 'Awaiting doctor approval.'
+                    }
+                }
+            ];
+            
+            updateDashboard();
+            if (currentSection.includes('cases')) {
+                updateCasesList(currentSection);
+            }
+            addDebug(`📊 Loaded ${allCases.length} demo cases`, 'success');
+            
+            // Show debug info for doctor portal
+            debugDoctorPortal();
+        }
+        
+        // Update navigation counts
+        function updateNavigationCounts() {
+            document.getElementById('allCasesCount').textContent = allCases.length;
+            document.getElementById('pendingCasesCount').textContent = allCases.filter(isPendingCase).length;
+            document.getElementById('revisionCasesCount').textContent = allCases.filter(isRevisionCase).length;
+            document.getElementById('holdCasesCount').textContent = allCases.filter(isHoldCase).length;
+            document.getElementById('cancelledCasesCount').textContent = allCases.filter(isCancelledCase).length;
+            document.getElementById('doctorPendingCasesCount').textContent = allCases.filter(isDoctorPendingCase).length;
+        }
+        
+        // Update cases list for a specific section
+        function updateCasesList(section) {
+            let cases = [];
+            let sectionName = '';
+            
+            switch(section) {
+                case 'all-cases':
+                    cases = allCases;
+                    sectionName = 'All Cases';
+                    break;
+                case 'pending-cases':
+                    cases = allCases.filter(isPendingCase);
+                    sectionName = 'Pending Upload';
+                    break;
+                case 'revision-cases':
+                    cases = allCases.filter(isRevisionCase);
+                    sectionName = 'Revision Requests';
+                    break;
+                case 'hold-cases':
+                    cases = allCases.filter(isHoldCase);
+                    sectionName = 'Cases On Hold';
+                    break;
+                case 'cancelled-cases':
+                    cases = allCases.filter(isCancelledCase);
+                    sectionName = 'Cancelled Cases';
+                    break;
+                case 'doctor-pending-cases':
+                    cases = allCases.filter(isDoctorPendingCase);
+                    sectionName = 'Doctor Portal - Pending Approval';
+                    break;
+                default:
+                    console.warn(`Unknown section: ${section}`);
+                    return;
+            }
+            
+            // Apply search filter if there's a search term
+            const searchInput = document.getElementById(section.replace('-cases', '') + 'Search') || 
+                              document.getElementById('caseSearch');
+            if (searchInput && searchInput.value) {
+                const searchTerm = searchInput.value.toLowerCase();
+                cases = cases.filter(caseItem => {
+                    return (
+                        (caseItem.caseId && caseItem.caseId.toLowerCase().includes(searchTerm)) ||
+                        (caseItem.patient && caseItem.patient.toLowerCase().includes(searchTerm)) ||
+                        (caseItem.doctor && caseItem.doctor.toLowerCase().includes(searchTerm)) ||
+                        (caseItem.status && caseItem.status.toLowerCase().includes(searchTerm))
+                    );
+                });
+            }
+            
+            // Convert section name to camelCase for element IDs
+            const camelCaseSection = section.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+            
+            // Safely update section count
+            const sectionCountElement = document.getElementById(`${camelCaseSection}SectionCount`);
+            if (sectionCountElement) {
+                sectionCountElement.textContent = cases.length;
+            }
+            
+            // For doctor portal, use a different layout
+            if (section === 'doctor-pending-cases') {
+                const doctorCasesList = document.getElementById('doctorPendingCasesList');
+                if (!doctorCasesList) {
+                    console.warn(`Element not found: doctorPendingCasesList`);
+                    return;
+                }
+                
+                if (cases.length === 0) {
+                    doctorCasesList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-stethoscope"></i>
+                            <h3>No Cases in Doctor Portal</h3>
+                            <p>There are no cases pending doctor approval at the moment.</p>
+                            <button class="btn btn-primary" onclick="showSection('external-doctor-portal')">
+                                <i class="fas fa-external-link-alt"></i> Check External Portal
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                doctorCasesList.innerHTML = cases.map(caseItem => {
+                    const caseId = caseItem.caseId || caseItem._id || 'Unknown ID';
+                    const patient = caseItem.patient || 'Unknown Patient';
+                    const dentist = caseItem.doctor || 'Unknown Dentist';
+                    const status = caseItem.status || 'Pending';
+                    const orderDate = caseItem.orderDate ? new Date(caseItem.orderDate).toLocaleDateString() : 'Unknown Date';
+                    const submittedDate = caseItem.treatmentPlan?.submittedDate || caseItem.invoice?.submittedDate || 'Unknown';
+                    
+                    return `
+                        <div class="doctor-case-card">
+                            <div class="doctor-case-header">
+                                <div class="doctor-case-id">${escapeHtml(caseId)}</div>
+                                <div class="doctor-case-status">${escapeHtml(status)}</div>
+                            </div>
+                            <div class="doctor-case-patient">${escapeHtml(patient)}</div>
+                            <div class="doctor-case-dentist">Dentist: ${escapeHtml(dentist)}</div>
+                            <div class="doctor-case-date">Submitted: ${escapeHtml(submittedDate)}</div>
+                            <div class="doctor-case-actions">
+                                <button class="btn btn-primary btn-sm" onclick="viewCase('${escapeHtml(caseItem._id)}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-success btn-sm" onclick="approveCase('${escapeHtml(caseItem._id)}')">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="requestRevision('${escapeHtml(caseItem._id)}')">
+                                    <i class="fas fa-redo"></i> Revision
+                                </button>
+                                <button class="btn btn-info btn-sm" onclick="syncCaseToExternalPortal('${escapeHtml(caseItem._id)}')">
+                                    <i class="fas fa-paper-plane"></i> Send to Portal
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                return;
+            }
+            
+            // Safely update cases list for other sections
+            const casesList = document.getElementById(`${camelCaseSection}List`);
+            if (!casesList) {
+                console.warn(`Element not found: ${camelCaseSection}List`);
+                return;
+            }
+            
+            if (cases.length === 0) {
+                casesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>No ${sectionName}</h3>
+                        <p>There are no cases in this category at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            casesList.innerHTML = cases.map(caseItem => {
+                const caseId = caseItem.caseId || caseItem._id || 'Unknown ID';
+                const patient = caseItem.patient || 'Unknown Patient';
+                const dentist = caseItem.doctor || 'Unknown Dentist';
+                const status = caseItem.status || 'Pending';
+                const orderDate = caseItem.orderDate ? new Date(caseItem.orderDate).toLocaleDateString() : 'Unknown Date';
+                
+                return `
+                    <div class="case-item">
+                        <div class="case-info">
+                            <div class="case-id">${escapeHtml(caseId)}</div>
+                            <div class="case-patient">Patient: ${escapeHtml(patient)}</div>
+                            <div class="case-dentist">Dentist: ${escapeHtml(dentist)}</div>
+                            <div class="case-date">Order Date: ${escapeHtml(orderDate)}</div>
+                        </div>
+                        <div class="case-status status-${getStatusClass(status)}">${escapeHtml(status)}</div>
+                        <div class="case-actions">
+                            <button class="btn btn-primary btn-sm" onclick="viewCase('${escapeHtml(caseItem._id)}')" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="uploadFiles('${escapeHtml(caseItem._id)}')" title="Upload Files">
+                                <i class="fas fa-upload"></i>
+                            </button>
+                            ${section === 'pending-cases' ? `
+                            <button class="btn btn-warning btn-sm" onclick="markAsComplete('${escapeHtml(caseItem._id)}')" title="Mark Complete">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Update dashboard with recent cases
+        function updateDashboard() {
+            // Update stats
+            document.getElementById('totalCases').textContent = allCases.length;
+            document.getElementById('pendingCases').textContent = allCases.filter(isPendingCase).length;
+            document.getElementById('revisionCases').textContent = allCases.filter(isRevisionCase).length;
+            document.getElementById('holdCases').textContent = allCases.filter(isHoldCase).length;
+            document.getElementById('cancelledCases').textContent = allCases.filter(isCancelledCase).length;
+            document.getElementById('doctorPendingCases').textContent = allCases.filter(isDoctorPendingCase).length;
+            
+            // Update navigation counts
+            updateNavigationCounts();
+            
+            // Update recent cases (show last 6 cases)
+            const recentCases = allCases.slice(-6).reverse();
+            document.getElementById('recentCasesCount').textContent = recentCases.length;
+            
+            const recentCasesList = document.getElementById('recentCasesList');
+            
+            if (recentCases.length === 0) {
+                recentCasesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clock"></i>
+                        <h3>No Recent Cases</h3>
+                        <p>There are no cases to display at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            recentCasesList.innerHTML = recentCases.map(caseItem => {
+                const caseId = caseItem.caseId || caseItem._id || 'Unknown ID';
+                const patient = caseItem.patient || 'Unknown Patient';
+                const dentist = caseItem.doctor || 'Unknown Dentist';
+                const status = caseItem.status || 'Pending';
+                const orderDate = caseItem.orderDate ? new Date(caseItem.orderDate).toLocaleDateString() : 'Unknown Date';
+                
+                return `
+                    <div class="recent-case-card">
+                        <div class="recent-case-header">
+                            <div class="recent-case-id">${escapeHtml(caseId)}</div>
+                            <div class="recent-case-status status-${getStatusClass(status)}">${escapeHtml(status)}</div>
+                        </div>
+                        <div class="recent-case-patient">${escapeHtml(patient)}</div>
+                        <div class="recent-case-dentist">Dentist: ${escapeHtml(dentist)}</div>
+                        <div class="recent-case-date">Order Date: ${escapeHtml(orderDate)}</div>
+                        <div class="recent-case-actions">
+                            <button class="btn btn-primary btn-sm" onclick="viewCase('${escapeHtml(caseItem._id)}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="uploadFiles('${escapeHtml(caseItem._id)}')">
+                                <i class="fas fa-upload"></i> Upload
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Case filtering functions
+        function isPendingCase(caseItem) {
+            if (!caseItem.status) return true;
+            const status = (caseItem.status || '').toString().toLowerCase().trim();
+            
+            // Pending cases are those that need upload/action
+            return status.includes('pending') && !status.includes('doctor') && 
+                   status.includes('upload') || 
+                   status.includes('new') ||
+                   (!status.includes('approved') && 
+                    !status.includes('completed') && 
+                    !status.includes('cancelled') && 
+                    !status.includes('rejected') && 
+                    !status.includes('finished') && 
+                    !status.includes('done') &&
+                    !status.includes('revision') &&
+                    !status.includes('hold') &&
+                    !status.includes('doctor'));
+        }
+
+        function isRevisionCase(caseItem) {
+            const status = (caseItem.status || '').toString().toLowerCase().trim();
+            return status.includes('revision') || status.includes('rework');
+        }
+
+        function isHoldCase(caseItem) {
+            const status = (caseItem.status || '').toString().toLowerCase().trim();
+            return status.includes('hold') || status.includes('paused') || status.includes('waiting');
+        }
+
+        function isCancelledCase(caseItem) {
+            const status = (caseItem.status || '').toString().toLowerCase().trim();
+            return status.includes('cancelled') || status.includes('canceled') || status.includes('rejected');
+        }
+        
+        function isDoctorPendingCase(caseItem) {
+            if (!caseItem.status) return false;
+            const status = (caseItem.status || '').toString().toLowerCase().trim();
+            
+            // Cases that should appear in doctor portal
+            return status.includes('doctor') || 
+                   status.includes('pending approval') ||
+                   status === 'pending doctor approval' ||
+                   status === 'pending doctor approval with invoice' ||
+                   (status.includes('pending') && status.includes('approval'));
+        }
+        
+        // Get status class for styling
+        function getStatusClass(status) {
+            if (!status) return 'pending';
+            
+            const statusLower = status.toLowerCase();
+            if (statusLower.includes('pending') && statusLower.includes('doctor')) return 'doctor-pending';
+            if (statusLower.includes('pending') || statusLower.includes('upload') || statusLower.includes('new')) return 'pending';
+            if (statusLower.includes('revision') || statusLower.includes('rework')) return 'revision';
+            if (statusLower.includes('hold') || statusLower.includes('paused') || statusLower.includes('waiting')) return 'hold';
+            if (statusLower.includes('cancelled') || statusLower.includes('canceled') || statusLower.includes('rejected')) return 'cancelled';
+            if (statusLower.includes('approved') || statusLower.includes('completed')) return 'approved';
+            return 'pending';
+        }
+
+        // View case details with full modal
+        function viewCase(caseId) {
+            const caseItem = allCases.find(c => c._id === caseId);
+            if (caseItem) {
+                currentCaseId = caseId;
+                
+                // Update modal title
+                document.getElementById('modalCaseId').textContent = `Case: ${caseItem.caseId || caseItem._id}`;
+                
+                // Build modal content with tabs
+                const modalContent = `
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab('details')">Case Details</button>
+                        <button class="tab" onclick="switchTab('treatment')">Treatment Plan</button>
+                        <button class="tab" onclick="switchTab('invoice')">Invoice</button>
+                    </div>
+                    
+                    <div id="tab-details" class="tab-content active">
+                        ${renderCaseDetails(caseItem)}
+                    </div>
+                    
+                    <div id="tab-treatment" class="tab-content">
+                        ${renderTreatmentPlan(caseItem)}
+                    </div>
+                    
+                    <div id="tab-invoice" class="tab-content">
+                        ${renderInvoice(caseItem)}
+                    </div>
+                `;
+                
+                document.getElementById('modalBody').innerHTML = modalContent;
+                document.getElementById('caseModal').classList.add('active');
+                
+                addDebug(`📋 Opened case details: ${caseItem.caseId}`);
+            }
+        }
+        
+        // Render case details tab
+        function renderCaseDetails(caseItem) {
+            return `
+                <div class="case-details-grid">
+                    <div class="detail-group">
+                        <div class="detail-label">Patient Name</div>
+                        <div class="detail-value">${caseItem.patient || 'Unknown'}</div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Age</div>
+                        <div class="detail-value">${caseItem.age || 'Unknown'}</div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Dentist</div>
+                        <div class="detail-value">${caseItem.doctor || 'Unknown'}</div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">
+                            <span class="case-status status-${getStatusClass(caseItem.status)}">${caseItem.status || 'Pending'}</span>
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Order Date</div>
+                        <div class="detail-value">${caseItem.orderDate ? new Date(caseItem.orderDate).toLocaleDateString() : 'Unknown'}</div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Impression Type</div>
+                        <div class="detail-value">${caseItem.impressionType || 'Not specified'}</div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Arch Selection</div>
+                        <div class="detail-value">${caseItem.archSelection || 'Not specified'}</div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Selected Teeth</div>
+                        <div class="detail-value">${caseItem.selectedTeeth || 'Not specified'}</div>
+                    </div>
+                </div>
+                
+                <div class="detail-group">
+                    <div class="detail-label">Special Instructions</div>
+                    <div class="instructions-box">${caseItem.instructions || 'No special instructions provided.'}</div>
+                </div>
+                
+                ${caseItem.attachments && caseItem.attachments.length > 0 ? `
+                <div class="detail-group">
+                    <div class="detail-label">Attachments (${caseItem.attachments.length})</div>
+                    <div class="detail-value">
+                        <ul style="padding-left: 20px; margin-top: 5px;">
+                            ${caseItem.attachments.map(attachment => `
+                                <li>
+                                    ${attachment}
+                                    <button class="btn btn-sm btn-primary" onclick="viewFileUrl('${attachment}')" style="margin-left: 10px;">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+        }
+        
+        // Render treatment plan tab with Web Viewer integration
+        function renderTreatmentPlan(caseItem) {
+            const treatmentPlan = caseItem.treatmentPlan || {};
+            return `
+                <div class="upload-section">
+                    <h3><i class="fas fa-file-medical-alt"></i> Treatment Plan Upload</h3>
+                    
+                    <!-- Web Viewer URL Section -->
+                    <div class="detail-group">
+                        <div class="detail-label">Web Viewer URL</div>
+                        <div class="input-group" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <input type="url" class="form-control" id="webViewerUrl" 
+                                   placeholder="https://vision.portal.softsmile.com/webviewer/..." 
+                                   value="${treatmentPlan.webViewerUrl || ''}">
+                            <button class="btn btn-primary" onclick="testWebViewerUrl()" type="button">
+                                <i class="fas fa-external-link-alt"></i> Test
+                            </button>
+                            <button class="btn btn-info" onclick="openWebViewerFullscreen('${treatmentPlan.webViewerUrl || ''}')" type="button" 
+                                    ${!treatmentPlan.webViewerUrl ? 'disabled' : ''}>
+                                <i class="fas fa-expand"></i> Full Screen
+                            </button>
+                        </div>
+                        <small style="color: #666;">Enter the SoftSmile Vision Portal Web Viewer URL</small>
+                    </div>
+
+                    <!-- File Upload Section -->
+                    <div class="upload-area" id="treatmentUploadArea" onclick="document.getElementById('treatmentFileInput').click()">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            <p>Click to upload treatment plan files</p>
+                            <p class="text-muted">PDF, STL, JPG, PNG (Max 10MB)</p>
+                        </div>
+                        <input type="file" id="treatmentFileInput" class="file-input" accept=".pdf,.stl,.jpg,.jpeg,.png" onchange="handleTreatmentPlanUpload(this.files)">
+                    </div>
+                    
+                    <div class="file-list" id="treatmentFileList">
+                        ${uploadedFiles.length > 0 ? uploadedFiles.map(file => `
+                            <div class="file-item">
+                                <div class="file-info">
+                                    <i class="fas fa-file-pdf file-icon"></i>
+                                    <span>${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="btn btn-sm btn-primary" onclick="viewFileUrl('${file.name}')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="removeFile('${file.name}')">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('') : '<p>No files uploaded yet.</p>'}
+                        
+                        <!-- Display Web Viewer URL if exists -->
+                        ${treatmentPlan.webViewerUrl ? `
+                            <div class="file-item" style="background: #e7f3ff; border-left: 4px solid #2c7fb8;">
+                                <div class="file-info">
+                                    <i class="fas fa-globe file-icon" style="color: #2c7fb8;"></i>
+                                    <span>Web Viewer Treatment Plan</span>
+                                    <span style="margin-left: 10px; font-size: 0.8rem; color: #666;">${treatmentPlan.webViewerUrl}</span>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="btn btn-sm btn-primary" onclick="openWebViewer('${treatmentPlan.webViewerUrl}')">
+                                        <i class="fas fa-external-link-alt"></i> Open
+                                    </button>
+                                    <button class="btn btn-sm btn-info" onclick="openWebViewerFullscreen('${treatmentPlan.webViewerUrl}')">
+                                        <i class="fas fa-expand"></i> Fullscreen
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" onclick="copyWebViewerUrl('${treatmentPlan.webViewerUrl}')">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                <div class="detail-group">
+                    <div class="detail-label">Treatment Notes</div>
+                    <textarea class="form-control" rows="4" id="treatmentNotes" placeholder="Add any additional treatment notes...">${treatmentPlan.notes || ''}</textarea>
+                </div>
+                
+                <div class="detail-group">
+                    <button class="btn btn-success" onclick="submitToDoctorPortal()">
+                        <i class="fas fa-paper-plane"></i> Submit to Doctor Portal
+                    </button>
+                    <button class="btn btn-info" onclick="syncCaseToExternalPortal('${currentCaseId}')" style="margin-left: 10px;">
+                        <i class="fas fa-paper-plane"></i> Send to External Portal
+                    </button>
+                </div>
+            `;
+        }
+        
+        // Render invoice tab with item management
+        function renderInvoice(caseItem) {
+            const invoice = caseItem.invoice || { items: [], total: 0 };
+            return `
+                <div class="invoice-section">
+                    <h3><i class="fas fa-file-invoice-dollar"></i> Invoice Details</h3>
+                    
+                    <!-- Add Item Form -->
+                    <div class="add-item-form">
+                        <h4 style="margin-bottom: 15px;">
+                            <i class="fas fa-plus-circle"></i> 
+                            ${editingInvoiceItemIndex === -1 ? 'Add New Item' : 'Edit Item'}
+                        </h4>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2;">
+                                <label for="itemDescription">Description</label>
+                                <input type="text" class="form-control" id="itemDescription" 
+                                       placeholder="Enter item description" 
+                                       value="${editingInvoiceItemIndex !== -1 ? invoice.items[editingInvoiceItemIndex]?.description || '' : ''}">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label for="itemAmount">Amount ($)</label>
+                                <input type="number" class="form-control" id="itemAmount" 
+                                       placeholder="0.00" step="0.01" min="0"
+                                       value="${editingInvoiceItemIndex !== -1 ? invoice.items[editingInvoiceItemIndex]?.amount || '' : ''}">
+                            </div>
+                        </div>
+                        <div class="invoice-actions-row">
+                            <div>
+                                ${editingInvoiceItemIndex === -1 ? `
+                                    <button type="button" class="btn btn-success" onclick="addInvoiceItem()">
+                                        <i class="fas fa-plus"></i> Add Item
+                                    </button>
+                                ` : `
+                                    <button type="button" class="btn btn-primary" onclick="updateInvoiceItem()">
+                                        <i class="fas fa-save"></i> Update Item
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="cancelEditInvoiceItem()" style="margin-left: 10px;">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                `}
+                            </div>
+                            <button type="button" class="btn btn-outline-danger" onclick="clearAllInvoiceItems()">
+                                <i class="fas fa-trash"></i> Clear All Items
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Invoice Items Table -->
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Amount ($)</th>
+                                <th class="actions-cell">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceItems">
+                            ${invoice.items.map((item, index) => `
+                                <tr>
+                                    <td>${item.description}</td>
+                                    <td>$${item.amount}</td>
+                                    <td class="actions-cell">
+                                        <button class="btn btn-sm btn-warning" onclick="editInvoiceItem(${index})" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="removeInvoiceItem(${index})" title="Remove">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                            ${invoice.items.length === 0 ? `
+                                <tr>
+                                    <td colspan="3" style="text-align: center; color: #6c757d; padding: 20px;">
+                                        <i class="fas fa-receipt" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                                        No invoice items added yet
+                                    </td>
+                                </tr>
+                            ` : ''}
+                        </tbody>
+                    </table>
+                    
+                    <!-- Invoice Totals -->
+                    <div class="invoice-totals">
+                        <div class="invoice-total-row">
+                            <span>Subtotal:</span>
+                            <span id="invoiceSubtotal">$${calculateSubtotal(invoice.items).toFixed(2)}</span>
+                        </div>
+                        <div class="invoice-total-row">
+                            <span>Tax (10%):</span>
+                            <span id="invoiceTax">$${(calculateSubtotal(invoice.items) * 0.1).toFixed(2)}</span>
+                        </div>
+                        <div class="invoice-total-row">
+                            <span>Total:</span>
+                            <span id="invoiceTotal">$${(calculateSubtotal(invoice.items) * 1.1).toFixed(2)}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Invoice Actions -->
+                    <div class="invoice-actions">
+                        <button class="btn btn-primary" onclick="generateInvoice()">
+                            <i class="fas fa-file-pdf"></i> Generate PDF
+                        </button>
+                        <button class="btn btn-success" onclick="sendInvoiceToDoctor()">
+                            <i class="fas fa-paper-plane"></i> Send to Doctor Portal
+                        </button>
+                        <button class="btn btn-info" onclick="saveInvoice()">
+                            <i class="fas fa-save"></i> Save Invoice
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Tab switching function
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        // File upload functions
+        function handleTreatmentPlanUpload(files) {
+            if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    uploadedFiles.push({
+                        name: files[i].name,
+                        size: files[i].size,
+                        type: files[i].type,
+                        url: URL.createObjectURL(files[i]) // Create object URL for preview
+                    });
+                }
+                updateFileList();
+                showNotification(`Successfully uploaded ${files.length} file(s)`, 'success');
+                
+                // Auto-save changes when files are uploaded
+                setTimeout(saveCaseChanges, 500);
+            }
+        }
+        
+        function updateFileList() {
+            const fileList = document.getElementById('treatmentFileList');
+            fileList.innerHTML = uploadedFiles.map(file => `
+                <div class="file-item">
+                    <div class="file-info">
+                        <i class="fas fa-file-pdf file-icon"></i>
+                        <span>${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+                    </div>
+                    <div class="file-actions">
+                        <button class="btn btn-sm btn-primary" onclick="viewFileUrl('${file.name}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="removeFile('${file.name}')">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Enhanced file viewer with fullscreen option
+        function viewFileUrl(fileName) {
+            const file = uploadedFiles.find(f => f.name === fileName);
+            if (file && file.url) {
+                document.getElementById('fileViewerTitle').textContent = fileName;
+                
+                // Determine file type and render appropriate preview
+                let previewContent = '';
+                if (file.type.includes('image')) {
+                    previewContent = `
+                        <div class="file-preview-container">
+                            <img src="${file.url}" alt="${fileName}" class="file-preview">
+                            <div class="file-info-panel">
+                                <div class="file-info-row">
+                                    <div class="file-info-label">File Name:</div>
+                                    <div class="file-info-value">${fileName}</div>
+                                </div>
+                                <div class="file-info-row">
+                                    <div class="file-info-label">File Type:</div>
+                                    <div class="file-info-value">${file.type}</div>
+                                </div>
+                                <div class="file-info-row">
+                                    <div class="file-info-label">File Size:</div>
+                                    <div class="file-info-value">${(file.size / 1024).toFixed(1)} KB</div>
+                                </div>
+                            </div>
+                            <div class="file-actions-panel">
+                                <a href="${file.url}" download="${fileName}" class="btn btn-primary">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                                <button class="btn btn-secondary" onclick="printFile()">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else if (file.type.includes('pdf')) {
+                    previewContent = `
+                        <div class="file-preview-container">
+                            <iframe src="${file.url}" width="100%" height="500px" frameborder="0"></iframe>
+                            <div class="file-info-panel">
+                                <div class="file-info-row">
+                                    <div class="file-info-label">File Name:</div>
+                                    <div class="file-info-value">${fileName}</div>
+                                </div>
+                                <div class="file-info-row">
+                                    <div class="file-info-label">File Type:</div>
+                                    <div class="file-info-value">${file.type}</div>
+                                </div>
+                                <div class="file-info-row">
+                                    <div class="file-info-label">File Size:</div>
+                                    <div class="file-info-value">${(file.size / 1024).toFixed(1)} KB</div>
+                                </div>
+                            </div>
+                            <div class="file-actions-panel">
+                                <a href="${file.url}" download="${fileName}" class="btn btn-primary">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                                <button class="btn btn-secondary" onclick="printFile()">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    previewContent = `
+                        <div class="file-preview-container">
+                            <div style="text-align: center; padding: 40px;">
+                                <i class="fas fa-file" style="font-size: 4rem; color: #6c757d; margin-bottom: 20px;"></i>
+                                <h4>${fileName}</h4>
+                                <p>Preview not available for this file type</p>
+                                <div class="file-info-panel" style="margin-top: 20px;">
+                                    <div class="file-info-row">
+                                        <div class="file-info-label">File Name:</div>
+                                        <div class="file-info-value">${fileName}</div>
+                                    </div>
+                                    <div class="file-info-row">
+                                        <div class="file-info-label">File Type:</div>
+                                        <div class="file-info-value">${file.type}</div>
+                                    </div>
+                                    <div class="file-info-row">
+                                        <div class="file-info-label">File Size:</div>
+                                        <div class="file-info-value">${(file.size / 1024).toFixed(1)} KB</div>
+                                    </div>
+                                </div>
+                                <div class="file-actions-panel">
+                                    <a href="${file.url}" download="${fileName}" class="btn btn-primary">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                    <a href="${file.url}" target="_blank" class="btn btn-info">
+                                        <i class="fas fa-external-link-alt"></i> Open in New Tab
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('fileViewerBody').innerHTML = previewContent;
+                document.getElementById('fileViewerModal').classList.add('active');
+            } else {
+                showNotification('File not found or no preview available', 'warning');
+            }
+        }
+        
+        function removeFile(fileName) {
+            const file = uploadedFiles.find(f => f.name === fileName);
+            if (file && file.url) {
+                URL.revokeObjectURL(file.url); // Clean up object URL
+            }
+            uploadedFiles = uploadedFiles.filter(file => file.name !== fileName);
+            updateFileList();
+            showNotification(`File ${fileName} removed`, 'warning');
+            
+            // Auto-save changes when files are removed
+            setTimeout(saveCaseChanges, 500);
+        }
+        
+        // File viewer functions
+        function toggleFullscreen() {
+            const fileViewer = document.getElementById('fileViewerModal');
+            if (!isFullscreen) {
+                fileViewer.classList.add('fullscreen');
+                isFullscreen = true;
+            } else {
+                fileViewer.classList.remove('fullscreen');
+                isFullscreen = false;
+            }
+        }
+        
+        function closeFileViewer() {
+            document.getElementById('fileViewerModal').classList.remove('active');
+            document.getElementById('fileViewerModal').classList.remove('fullscreen');
+            isFullscreen = false;
+        }
+        
+        function printFile() {
+            window.print();
+        }
+        
+        // Web Viewer Fullscreen Functions
+        function openWebViewerFullscreen(url) {
+            if (!url) {
+                // Try to get URL from input field
+                const urlInput = document.getElementById('webViewerUrl');
+                url = urlInput ? urlInput.value.trim() : '';
+            }
+            
+            if (!url) {
+                showNotification('Please enter a Web Viewer URL first', 'warning');
+                return;
+            }
+            
+            // Set the URL in the modal input
+            const modalUrlInput = document.getElementById('webViewerUrlInput');
+            if (modalUrlInput) {
+                modalUrlInput.value = url;
+            }
+            
+            // Load the URL in the iframe
+            loadWebViewerUrl(url);
+            
+            // Show the modal
+            document.getElementById('webViewerModal').classList.add('active');
+            document.getElementById('webViewerModalTitle').textContent = 'Treatment Plan - Web Viewer';
+            
+            addDebug(`🖥️ Opening Web Viewer in fullscreen: ${url}`);
+        }
+        
+        function loadWebViewerUrl(url = null) {
+            const iframe = document.getElementById('webViewerFrame');
+            const statusElement = document.getElementById('webViewerStatus');
+            const urlInput = document.getElementById('webViewerUrlInput');
+            
+            if (!url) {
+                url = urlInput.value.trim();
+            }
+            
+            if (!url) {
+                showNotification('Please enter a Web Viewer URL', 'warning');
+                return;
+            }
+            
+            // Basic URL validation
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                showNotification('Please enter a valid URL starting with http:// or https://', 'warning');
+                return;
+            }
+            
+            // Update the input field
+            urlInput.value = url;
+            
+            // Update status
+            statusElement.innerHTML = `<i class="fas fa-sync fa-spin"></i> Loading Web Viewer...`;
+            
+            // Load the URL in iframe
+            iframe.src = url;
+            
+            // Add event listeners to track loading state
+            iframe.onload = function() {
+                statusElement.innerHTML = `<i class="fas fa-check-circle" style="color: #28a745;"></i> Web Viewer loaded successfully`;
+                showNotification('Web Viewer loaded successfully', 'success');
+            };
+            
+            iframe.onerror = function() {
+                statusElement.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i> Failed to load Web Viewer`;
+                showNotification('Failed to load Web Viewer. Please check the URL.', 'error');
+            };
+        }
+        
+        function reloadWebViewer() {
+            const iframe = document.getElementById('webViewerFrame');
+            const statusElement = document.getElementById('webViewerStatus');
+            
+            if (iframe.src) {
+                statusElement.innerHTML = `<i class="fas fa-sync fa-spin"></i> Reloading Web Viewer...`;
+                iframe.src = iframe.src;
+                showNotification('Web Viewer reloading...', 'info');
+            } else {
+                showNotification('No Web Viewer URL to reload', 'warning');
+            }
+        }
+        
+        function toggleWebViewerFullscreen() {
+            const modal = document.getElementById('webViewerModal');
+            if (!modal.classList.contains('fullscreen')) {
+                modal.classList.add('fullscreen');
+                document.querySelector('.webviewer-controls').style.display = 'flex';
+                showNotification('Entered fullscreen mode', 'info');
+            } else {
+                modal.classList.remove('fullscreen');
+                showNotification('Exited fullscreen mode', 'info');
+            }
+        }
+        
+        function closeWebViewer() {
+            document.getElementById('webViewerModal').classList.remove('active');
+            document.getElementById('webViewerModal').classList.remove('fullscreen');
+            
+            // Clear the iframe source
+            const iframe = document.getElementById('webViewerFrame');
+            iframe.src = '';
+            
+            // Reset status
+            document.getElementById('webViewerStatus').innerHTML = `<i class="fas fa-info-circle"></i> Ready to load Web Viewer`;
+            
+            addDebug('🔒 Closed Web Viewer');
+        }
+        
+        function openInNewTab() {
+            const urlInput = document.getElementById('webViewerUrlInput');
+            const url = urlInput.value.trim();
+            
+            if (url) {
+                window.open(url, '_blank');
+                showNotification('Opened in new tab', 'success');
+            } else {
+                showNotification('No URL to open', 'warning');
+            }
+        }
+        
+        function copyCurrentUrl() {
+            const urlInput = document.getElementById('webViewerUrlInput');
+            const url = urlInput.value.trim();
+            
+            if (url) {
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification('URL copied to clipboard', 'success');
+                }).catch(err => {
+                    console.error('Failed to copy URL: ', err);
+                    showNotification('Failed to copy URL to clipboard', 'error');
+                });
+            } else {
+                showNotification('No URL to copy', 'warning');
+            }
+        }
+        
+        // Web Viewer URL functions
+        function testWebViewerUrl() {
+            const urlInput = document.getElementById('webViewerUrl');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                showNotification('Please enter a Web Viewer URL', 'warning');
+                return;
+            }
+            
+            // Basic URL validation
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                showNotification('Please enter a valid URL starting with http:// or https://', 'warning');
+                return;
+            }
+            
+            // Ask user if they want to open in new tab or fullscreen
+            if (confirm('Open Web Viewer in:\n\n• "OK" for Fullscreen Mode\n• "Cancel" for New Tab')) {
+                openWebViewerFullscreen(url);
+            } else {
+                window.open(url, '_blank');
+                showNotification('Web Viewer opened in new tab', 'success');
+            }
+            
+            // Auto-save the URL
+            saveWebViewerUrl();
+        }
+        
+        function saveWebViewerUrl() {
+            const urlInput = document.getElementById('webViewerUrl');
+            const url = urlInput.value.trim();
+            
+            if (url && currentCaseId) {
+                const caseItem = allCases.find(c => c._id === currentCaseId);
+                if (caseItem) {
+                    if (!caseItem.treatmentPlan) {
+                        caseItem.treatmentPlan = {};
+                    }
+                    caseItem.treatmentPlan.webViewerUrl = url;
+                    caseItem.lastUpdated = new Date().toISOString().split('T')[0];
+                    
+                    showNotification('Web Viewer URL saved successfully', 'success');
+                    addDebug(`🔗 Web Viewer URL saved for case: ${caseItem.caseId}`);
+                }
+            }
+        }
+        
+        function openWebViewer(url) {
+            if (url) {
+                // Ask user for preferred viewing method
+                if (confirm('Open Web Viewer in:\n\n• "OK" for Fullscreen Mode\n• "Cancel" for New Tab')) {
+                    openWebViewerFullscreen(url);
+                } else {
+                    window.open(url, '_blank');
+                }
+                addDebug(`🌐 Opened Web Viewer: ${url}`);
+            }
+        }
+        
+        function copyWebViewerUrl(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                showNotification('Web Viewer URL copied to clipboard', 'success');
+            }).catch(err => {
+                console.error('Failed to copy URL: ', err);
+                showNotification('Failed to copy URL to clipboard', 'error');
+            });
+        }
+        
+        // Invoice Management Functions
+        function addInvoiceItem() {
+            const description = document.getElementById('itemDescription').value.trim();
+            const amount = parseFloat(document.getElementById('itemAmount').value);
+            
+            if (!description) {
+                showNotification('Please enter an item description', 'warning');
+                return;
+            }
+            
+            if (isNaN(amount) || amount <= 0) {
+                showNotification('Please enter a valid amount greater than 0', 'warning');
+                return;
+            }
+            
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem) {
+                if (!caseItem.invoice) {
+                    caseItem.invoice = { items: [], total: 0 };
+                }
+                
+                caseItem.invoice.items.push({
+                    description: description,
+                    amount: amount
+                });
+                
+                // Clear form
+                document.getElementById('itemDescription').value = '';
+                document.getElementById('itemAmount').value = '';
+                
+                // Update invoice display
+                updateInvoiceDisplay();
+                showNotification('Invoice item added successfully', 'success');
+                addDebug(`➕ Added invoice item: ${description} - $${amount}`);
+            }
+        }
+        
+        function editInvoiceItem(index) {
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem && caseItem.invoice && caseItem.invoice.items[index]) {
+                const item = caseItem.invoice.items[index];
+                document.getElementById('itemDescription').value = item.description;
+                document.getElementById('itemAmount').value = item.amount;
+                editingInvoiceItemIndex = index;
+                updateInvoiceDisplay();
+                showNotification('Editing invoice item', 'info');
+            }
+        }
+        
+        function updateInvoiceItem() {
+            if (editingInvoiceItemIndex === -1) return;
+            
+            const description = document.getElementById('itemDescription').value.trim();
+            const amount = parseFloat(document.getElementById('itemAmount').value);
+            
+            if (!description) {
+                showNotification('Please enter an item description', 'warning');
+                return;
+            }
+            
+            if (isNaN(amount) || amount <= 0) {
+                showNotification('Please enter a valid amount greater than 0', 'warning');
+                return;
+            }
+            
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem && caseItem.invoice) {
+                caseItem.invoice.items[editingInvoiceItemIndex] = {
+                    description: description,
+                    amount: amount
+                };
+                
+                // Clear form and reset editing state
+                document.getElementById('itemDescription').value = '';
+                document.getElementById('itemAmount').value = '';
+                editingInvoiceItemIndex = -1;
+                
+                // Update invoice display
+                updateInvoiceDisplay();
+                showNotification('Invoice item updated successfully', 'success');
+                addDebug(`✏️ Updated invoice item: ${description} - $${amount}`);
+            }
+        }
+        
+        function cancelEditInvoiceItem() {
+            document.getElementById('itemDescription').value = '';
+            document.getElementById('itemAmount').value = '';
+            editingInvoiceItemIndex = -1;
+            updateInvoiceDisplay();
+            showNotification('Edit cancelled', 'info');
+        }
+        
+        function removeInvoiceItem(index) {
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem && caseItem.invoice) {
+                const removedItem = caseItem.invoice.items.splice(index, 1)[0];
+                updateInvoiceDisplay();
+                showNotification(`Removed item: ${removedItem.description}`, 'warning');
+                addDebug(`🗑️ Removed invoice item: ${removedItem.description}`);
+            }
+        }
+        
+        function clearAllInvoiceItems() {
+            if (confirm('Are you sure you want to clear all invoice items? This action cannot be undone.')) {
+                const caseItem = allCases.find(c => c._id === currentCaseId);
+                if (caseItem && caseItem.invoice) {
+                    caseItem.invoice.items = [];
+                    updateInvoiceDisplay();
+                    showNotification('All invoice items cleared', 'warning');
+                    addDebug('🧹 Cleared all invoice items');
+                }
+            }
+        }
+        
+        function updateInvoiceDisplay() {
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem) {
+                // Re-render the invoice tab
+                const invoiceTab = document.getElementById('tab-invoice');
+                if (invoiceTab) {
+                    invoiceTab.innerHTML = renderInvoice(caseItem);
+                }
+            }
+        }
+        
+        function saveInvoice() {
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem) {
+                caseItem.lastUpdated = new Date().toISOString().split('T')[0];
+                showNotification('Invoice saved successfully', 'success');
+                addDebug(`💾 Invoice saved for case: ${caseItem.caseId}`);
+            }
+        }
+        
+        function sendInvoiceToDoctor() {
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem && caseItem.invoice && caseItem.invoice.items.length > 0) {
+                // Update case status to include invoice
+                caseItem.status = 'Pending Doctor Approval with Invoice';
+                caseItem.lastUpdated = new Date().toISOString().split('T')[0];
+                
+                // Add invoice submission date
+                if (!caseItem.invoice) {
+                    caseItem.invoice = { items: [] };
+                }
+                caseItem.invoice.submittedDate = new Date().toISOString().split('T')[0];
+                
+                // Force update the dashboard and cases list
+                updateDashboard();
+                updateCasesList('doctor-pending-cases');
+                
+                showNotification('Invoice sent to Doctor Portal successfully!', 'success');
+                addDebug(`📤 Invoice sent to Doctor Portal: ${caseItem.caseId}`);
+                
+                // Close modal and switch to doctor portal
+                setTimeout(() => {
+                    closeCaseModal();
+                    showSection('doctor-pending-cases');
+                }, 1000);
+            } else {
+                showNotification('Please add at least one invoice item before sending', 'warning');
+            }
+        }
+        
+        // Invoice functions
+        function calculateSubtotal(items) {
+            return items.reduce((total, item) => total + (parseFloat(item.amount) || 0), 0);
+        }
+        
+        function generateInvoice() {
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem && caseItem.invoice && caseItem.invoice.items.length > 0) {
+                // In a real application, this would generate an actual PDF
+                // For now, we'll simulate the process
+                showNotification('Invoice PDF generated successfully', 'success');
+                addDebug(`📄 Generated PDF invoice for case: ${caseItem.caseId}`);
+                
+                // Create a simple invoice preview
+                const invoiceContent = `
+                    <h2>ClearPro Aligner - Invoice</h2>
+                    <p><strong>Case ID:</strong> ${caseItem.caseId}</p>
+                    <p><strong>Patient:</strong> ${caseItem.patient}</p>
+                    <p><strong>Dentist:</strong> ${caseItem.doctor}</p>
+                    <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                    <hr>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left; border-bottom: 1px solid #ddd; padding: 8px;">Description</th>
+                                <th style="text-align: right; border-bottom: 1px solid #ddd; padding: 8px;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${caseItem.invoice.items.map(item => `
+                                <tr>
+                                    <td style="padding: 8px;">${item.description}</td>
+                                    <td style="text-align: right; padding: 8px;">$${item.amount}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td style="padding: 8px; border-top: 1px solid #ddd;"><strong>Subtotal:</strong></td>
+                                <td style="text-align: right; padding: 8px; border-top: 1px solid #ddd;">$${calculateSubtotal(caseItem.invoice.items).toFixed(2)}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>Tax (10%):</strong></td>
+                                <td style="text-align: right; padding: 8px;">$${(calculateSubtotal(caseItem.invoice.items) * 0.1).toFixed(2)}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>Total:</strong></td>
+                                <td style="text-align: right; padding: 8px;"><strong>$${(calculateSubtotal(caseItem.invoice.items) * 1.1).toFixed(2)}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                `;
+                
+                // Open invoice in new window for printing
+                const invoiceWindow = window.open('', '_blank');
+                invoiceWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>Invoice - ${caseItem.caseId}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                            th, td { padding: 8px; text-align: left; }
+                            hr { margin: 20px 0; }
+                        </style>
+                    </head>
+                    <body>
+                        ${invoiceContent}
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                            };
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                invoiceWindow.document.close();
+            } else {
+                showNotification('Please add invoice items before generating PDF', 'warning');
+            }
+        }
+        
+        // External Portal Integration Functions
+        function openExternalPortal() {
+            window.open(EXTERNAL_DOCTOR_PORTAL_URL, '_blank');
+            addDebug(`🌐 Opened external doctor portal: ${EXTERNAL_DOCTOR_PORTAL_URL}`);
+        }
+        
+        function refreshExternalPortal() {
+            const iframe = document.getElementById('externalDoctorPortal');
+            if (iframe) {
+                iframe.src = iframe.src;
+                showNotification('External portal refreshed', 'info');
+                addDebug('🔄 Refreshed external doctor portal');
+            }
+        }
+        
+        function syncWithExternalPortal() {
+            showNotification('Syncing with external portal...', 'info');
+            addDebug('🔄 Starting sync with external doctor portal');
+            
+            // Get cases that should be in doctor portal
+            const doctorPortalCases = allCases.filter(isDoctorPendingCase);
+            
+            if (doctorPortalCases.length === 0) {
+                showNotification('No cases to sync with external portal', 'warning');
+                return;
+            }
+            
+            // Simulate API call to external portal
+            setTimeout(() => {
+                showNotification(`Synced ${doctorPortalCases.length} cases with external portal`, 'success');
+                addDebug(`✅ Synced ${doctorPortalCases.length} cases with external portal`);
+                
+                // Update case status to show they've been synced
+                doctorPortalCases.forEach(caseItem => {
+                    if (!caseItem.externalPortalSynced) {
+                        caseItem.externalPortalSynced = true;
+                        caseItem.externalPortalSyncDate = new Date().toISOString().split('T')[0];
+                    }
+                });
+                
+                // Refresh the display
+                updateCasesList('doctor-pending-cases');
+            }, 1500);
+        }
+        
+        function syncCaseToExternalPortal(caseId) {
+            const caseItem = allCases.find(c => c._id === caseId);
+            if (caseItem) {
+                showNotification(`Syncing case ${caseItem.caseId} with external portal...`, 'info');
+                addDebug(`🔄 Syncing case to external portal: ${caseItem.caseId}`);
+                
+                // Simulate API call
+                setTimeout(() => {
+                    caseItem.externalPortalSynced = true;
+                    caseItem.externalPortalSyncDate = new Date().toISOString().split('T')[0];
+                    caseItem.status = 'Synced with External Portal';
+                    
+                    showNotification(`Case ${caseItem.caseId} synced with external portal`, 'success');
+                    addDebug(`✅ Case synced with external portal: ${caseItem.caseId}`);
+                    
+                    // Refresh display
+                    updateDashboard();
+                    updateCasesList('doctor-pending-cases');
+                }, 1000);
+            }
+        }
+        
+        function testExternalPortalConnection() {
+            showNotification('Testing connection to external portal...', 'info');
+            addDebug(`🔌 Testing connection to: ${EXTERNAL_DOCTOR_PORTAL_URL}`);
+            
+            // Simulate connection test
+            setTimeout(() => {
+                showNotification('External portal connection successful!', 'success');
+                addDebug(`✅ External portal connection successful: ${EXTERNAL_DOCTOR_PORTAL_URL}`);
+            }, 1000);
+        }
+        
+        function syncAllCases() {
+            showNotification('Syncing all cases with external systems...', 'info');
+            addDebug('🔄 Starting full case synchronization');
+            
+            // Simulate full sync
+            setTimeout(() => {
+                const syncedCases = allCases.filter(c => isDoctorPendingCase(c)).length;
+                showNotification(`Synchronized ${syncedCases} cases with external systems`, 'success');
+                addDebug(`✅ Full synchronization completed: ${syncedCases} cases synced`);
+            }, 2000);
+        }
+        
+        // Submit to doctor portal
+        function submitToDoctorPortal() {
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem) {
+                // Update case status to show it's pending approval in doctor portal
+                caseItem.status = 'Pending Doctor Approval';
+                caseItem.lastUpdated = new Date().toISOString().split('T')[0];
+                
+                // Add uploaded files to case attachments
+                if (uploadedFiles.length > 0) {
+                    if (!caseItem.attachments) {
+                        caseItem.attachments = [];
+                    }
+                    uploadedFiles.forEach(file => {
+                        if (!caseItem.attachments.includes(file.name)) {
+                            caseItem.attachments.push(file.name);
+                        }
+                    });
+                }
+                
+                // Update treatment plan details including Web Viewer URL
+                const webViewerUrl = document.getElementById('webViewerUrl')?.value || '';
+                const treatmentNotes = document.getElementById('treatmentNotes')?.value || '';
+                
+                caseItem.treatmentPlan = {
+                    notes: treatmentNotes,
+                    webViewerUrl: webViewerUrl,
+                    submittedDate: new Date().toISOString().split('T')[0]
+                };
+                
+                // Force update the dashboard and cases list
+                updateDashboard();
+                updateCasesList('doctor-pending-cases');
+                
+                // Show success message
+                showNotification('Case submitted to Doctor Portal successfully!', 'success');
+                addDebug(`📤 Case submitted to Doctor Portal: ${caseItem.caseId}`);
+                
+                // Close modal after submission and switch to doctor portal
+                setTimeout(() => {
+                    closeCaseModal();
+                    showSection('doctor-pending-cases');
+                }, 1000);
+            }
+        }
+        
+        // Doctor portal actions
+        function approveCase(caseId) {
+            const caseItem = allCases.find(c => c._id === caseId);
+            if (caseItem) {
+                caseItem.status = 'Approved';
+                caseItem.lastUpdated = new Date().toISOString().split('T')[0];
+                caseItem.approvedDate = new Date().toISOString().split('T')[0];
+                updateDashboard();
+                updateCasesList(currentSection);
+                showNotification(`Case ${caseItem.caseId} approved successfully`, 'success');
+                addDebug(`✅ Case approved: ${caseItem.caseId}`);
+            }
+        }
+        
+        function requestRevision(caseId) {
+            const caseItem = allCases.find(c => c._id === caseId);
+            if (caseItem) {
+                caseItem.status = 'Revision Requested';
+                caseItem.lastUpdated = new Date().toISOString().split('T')[0];
+                updateDashboard();
+                updateCasesList(currentSection);
+                showNotification(`Revision requested for case ${caseItem.caseId}`, 'warning');
+                addDebug(`🔄 Revision requested: ${caseItem.caseId}`);
+            }
+        }
+        
+        // Modal functions
+        function closeCaseModal() {
+            document.getElementById('caseModal').classList.remove('active');
+            // Reset editing state
+            editingInvoiceItemIndex = -1;
+            addDebug('🔒 Closed case details modal');
+        }
+        
+        function saveCaseChanges() {
+            const caseItem = allCases.find(c => c._id === currentCaseId);
+            if (caseItem) {
+                // Save treatment plan changes in real-time
+                caseItem.treatmentPlan = {
+                    notes: document.getElementById('treatmentNotes')?.value || caseItem.treatmentPlan?.notes || '',
+                    webViewerUrl: document.getElementById('webViewerUrl')?.value || caseItem.treatmentPlan?.webViewerUrl || ''
+                };
+                
+                // Update last modified timestamp
+                caseItem.lastUpdated = new Date().toISOString().split('T')[0];
+                
+                showNotification('Changes saved successfully', 'success');
+                addDebug('💾 Case changes saved in real-time');
+            }
+        }
+        
+        // Action functions
+        function uploadFiles(caseId) {
+            const caseItem = allCases.find(c => c._id === caseId);
+            if (caseItem) {
+                viewCase(caseId);
+                // Switch to treatment plan tab
+                setTimeout(() => {
+                    document.querySelector('[onclick="switchTab(\'treatment\')"]').click();
+                }, 100);
+                addDebug(`📤 File upload initiated for case: ${caseItem.caseId}`);
+            }
+        }
+
+        function markAsComplete(caseId) {
+            const caseItem = allCases.find(c => c._id === caseId);
+            if (caseItem) {
+                caseItem.status = 'Pending Doctor Approval';
+                caseItem.lastUpdated = new Date().toISOString().split('T')[0];
+                
+                // Add submission date
+                if (!caseItem.treatmentPlan) {
+                    caseItem.treatmentPlan = {};
+                }
+                caseItem.treatmentPlan.submittedDate = new Date().toISOString().split('T')[0];
+                
+                updateDashboard();
+                updateCasesList('doctor-pending-cases');
+                
+                showNotification(`Case ${caseItem.caseId} submitted to Doctor Portal`, 'success');
+                addDebug(`✅ Case marked as complete and submitted to Doctor Portal: ${caseItem.caseId}`);
+                
+                // Switch to doctor portal to show the case
+                showSection('doctor-pending-cases');
+            }
+        }
+        
+        // Debug functions
+        function debugDoctorPortal() {
+            console.log('=== DOCTOR PORTAL DEBUG INFO ===');
+            console.log('All Cases:', allCases);
+            console.log('Doctor Portal Cases:', allCases.filter(isDoctorPendingCase));
+            console.log('Case Statuses:', allCases.map(c => ({ id: c.caseId, status: c.status })));
+            
+            const doctorCases = allCases.filter(isDoctorPendingCase);
+            addDebug(`🔍 Doctor Portal Debug: ${doctorCases.length} cases found`, 'info');
+            doctorCases.forEach(caseItem => {
+                addDebug(`   - ${caseItem.caseId}: ${caseItem.status}`, 'info');
+            });
+        }
+        
+        function showDebugInfo() {
+            showSection('debug-info');
+        }
+        
+        function hideDebugInfo() {
+            showSection('dashboard');
+        }
+        
+        function hideConnectionStatus() {
+            document.getElementById('connectionStatus').style.display = 'none';
+        }
+        
+        // Update debug panel
+        function updateDebugPanel() {
+            const debugContent = document.getElementById('debugContent');
+            debugContent.innerHTML = debugLog.map(item => `
+                <div class="debug-item debug-${item.type || 'info'}">
+                    [${item.timestamp || new Date().toLocaleTimeString()}] ${item.message}
+                </div>
+            `).join('');
+            debugContent.scrollTop = debugContent.scrollHeight;
+        }
+        
+        // Add debug message
+        function addDebug(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.push({timestamp, message, type});
+            
+            // Keep only last 50 debug messages
+            if (debugLog.length > 50) {
+                debugLog.shift();
+            }
+            
+            // Update debug panel if it's visible
+            if (currentSection === 'debug-info') {
+                updateDebugPanel();
+            }
+            
+            // Also log to browser console
+            console.log(`[${timestamp}] ${message}`);
+        }
+        
+        // Utility functions
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            notificationText.textContent = message;
+            notification.className = 'notification';
+            
+            if (type === 'error') {
+                notification.classList.add('error');
+            } else if (type === 'warning') {
+                notification.classList.add('warning');
+            } else if (type === 'info') {
+                notification.classList.add('info');
+            }
+            
+            notification.classList.add('active');
+            
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 4000);
+        }
+        
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // Add keyboard shortcuts for the web viewer
+        document.addEventListener('keydown', function(e) {
+            const webViewerModal = document.getElementById('webViewerModal');
+            if (webViewerModal.classList.contains('active')) {
+                // Escape key to close
+                if (e.key === 'Escape') {
+                    closeWebViewer();
+                }
+                // F11 or F key for fullscreen
+                if (e.key === 'F11' || (e.ctrlKey && e.key === 'f')) {
+                    e.preventDefault();
+                    toggleWebViewerFullscreen();
+                }
+                // R key to reload
+                if (e.key === 'r' && !e.ctrlKey) {
+                    e.preventDefault();
+                    reloadWebViewer();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
